@@ -516,6 +516,8 @@ function initPronunciationAssessmentDemo() {
 
   const scoreNum = document.getElementById('res-score-num');
   const scoreGrade = document.getElementById('res-score-grade');
+  const wordmatchNum = document.getElementById('res-wordmatch-num');
+  const wordmatchSub = document.getElementById('res-wordmatch-sub');
   const perNum = document.getElementById('res-per-num');
   const toneNum = document.getElementById('res-tone-num');
   const latencyNum = document.getElementById('res-latency-num');
@@ -530,6 +532,35 @@ function initPronunciationAssessmentDemo() {
   let animFrameId = null;
   let mediaRecorder = null;
   let recordedChunks = [];
+  let speechRecInstance = null;
+  let capturedTranscript = '';
+
+  function normalizeYorubaText(str) {
+    if (!str) return '';
+    return str
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function computeStringSimilarity(s1, s2) {
+    if (!s1 || !s2) return 0;
+    if (s1 === s2) return 1.0;
+    const l1 = s1.length, l2 = s2.length;
+    const d = Array.from({ length: l1 + 1 }, () => new Float32Array(l2 + 1));
+    for (let i = 0; i <= l1; i++) d[i][0] = i;
+    for (let j = 0; j <= l2; j++) d[0][j] = j;
+    for (let i = 1; i <= l1; i++) {
+      for (let j = 1; j <= l2; j++) {
+        const cost = s1[i - 1] === s2[j - 1] ? 0 : 1;
+        d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost);
+      }
+    }
+    return 1.0 - (d[l1][l2] / Math.max(l1, l2));
+  }
 
   const phraseData = {
     'ba-mi-soro': {
@@ -765,9 +796,31 @@ function initPronunciationAssessmentDemo() {
   function startRecording() {
     isRecording = true;
     recordedChunks = [];
+    capturedTranscript = '';
     if (recordBtnText) recordBtnText.textContent = '⏹️ Stop Recording';
     if (recIndicator) recIndicator.style.display = 'flex';
     if (waveformStatus) waveformStatus.textContent = 'Listening... Speak your Yoruba sentence now (3s limit)...';
+
+    // Start live speech recognizer for word match
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRec) {
+      try {
+        speechRecInstance = new SpeechRec();
+        speechRecInstance.continuous = true;
+        speechRecInstance.interimResults = true;
+        speechRecInstance.onresult = (e) => {
+          let t = '';
+          for (let i = 0; i < e.results.length; i++) {
+            t += e.results[i][0].transcript + ' ';
+          }
+          capturedTranscript = t.trim();
+        };
+        speechRecInstance.onerror = () => {};
+        speechRecInstance.start();
+      } catch (e) {
+        speechRecInstance = null;
+      }
+    }
 
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
     analyserNode = audioContext.createAnalyser();
@@ -837,6 +890,10 @@ function initPronunciationAssessmentDemo() {
     if (recordBtnText) recordBtnText.textContent = 'Record Voice (Microphone)';
     if (recIndicator) recIndicator.style.display = 'none';
     if (waveformStatus) waveformStatus.textContent = 'Audio recorded. Running live acoustic assessment pipeline...';
+
+    if (speechRecInstance) {
+      try { speechRecInstance.stop(); } catch (e) {}
+    }
 
     if (mediaStream) {
       mediaStream.getTracks().forEach(t => t.stop());
@@ -923,6 +980,8 @@ function initPronunciationAssessmentDemo() {
       return renderAssessmentReport({
         score: 12,
         grade: 'Recording Too Short',
+        wordMatch: 0,
+        wordMatchSub: 'Clipped (< 200ms)',
         per: '100.0%',
         toneAcc: '0.0%',
         latencyMs: Math.round(performance.now() - startTime),
@@ -958,6 +1017,8 @@ function initPronunciationAssessmentDemo() {
       return renderAssessmentReport({
         score: 14,
         grade: 'No Speech Detected (Silent Input)',
+        wordMatch: 0,
+        wordMatchSub: 'No Audio Detected',
         per: '100.0%',
         toneAcc: '0.0%',
         latencyMs: Math.round(performance.now() - startTime),
@@ -995,6 +1056,8 @@ function initPronunciationAssessmentDemo() {
       return renderAssessmentReport({
         score: 28,
         grade: 'Unvoiced Noise / Whisper',
+        wordMatch: 20,
+        wordMatchSub: 'Unvoiced Energy',
         per: '86.4%',
         toneAcc: '16.5%',
         latencyMs: Math.round(performance.now() - startTime),
@@ -1038,7 +1101,72 @@ function initPronunciationAssessmentDemo() {
       });
     }
 
-    // Step E: Syllable Segmentation & Tonal Classification
+    // Step E: Transcription, Word Match & Speech Coverage Verification
+    let acousticPeaks = 0;
+    let inPeak = false;
+    for (let i = 1; i < numFrames - 1; i++) {
+      const r = rmsArray[i];
+      if (r > rmsThreshold * 1.35 && r > rmsArray[i - 1] && r > rmsArray[i + 1]) {
+        if (!inPeak) {
+          acousticPeaks++;
+          inPeak = true;
+        }
+      } else if (r < rmsThreshold * 0.85) {
+        inPeak = false;
+      }
+    }
+    acousticPeaks = Math.max(1, acousticPeaks);
+
+    let wordMatchScore = 95;
+    let wordMatchSub = 'Target Prompt Verified';
+    let transcriptionFeedback = '';
+
+    if (!isLiveMic) {
+      wordMatchScore = 98;
+      wordMatchSub = 'Native Reference Synthesis';
+    } else if (capturedTranscript && capturedTranscript.length > 0) {
+      const normTranscript = normalizeYorubaText(capturedTranscript);
+      const normTarget = normalizeYorubaText(phrase.text);
+      const targetWords = normTarget.split(' ').filter(Boolean);
+      const heardWords = normTranscript.split(' ').filter(Boolean);
+
+      let matchedWords = 0;
+      targetWords.forEach(tw => {
+        if (heardWords.some(hw => hw === tw || computeStringSimilarity(hw, tw) > 0.65)) {
+          matchedWords++;
+        }
+      });
+
+      const tokenSim = targetWords.length > 0 ? (matchedWords / targetWords.length) : 0.5;
+      const charSim = computeStringSimilarity(normTranscript, normTarget);
+      const combinedSim = Math.max(tokenSim, charSim);
+
+      wordMatchScore = Math.round(combinedSim * 100);
+      if (wordMatchScore >= 70) {
+        wordMatchSub = `Verified: "${capturedTranscript}"`;
+        transcriptionFeedback = `Speech recognition matched target words ("${capturedTranscript}"). `;
+      } else {
+        wordMatchSub = `Mismatch: "${capturedTranscript}"`;
+        transcriptionFeedback = `Speech coverage mismatch: heard "${capturedTranscript}" instead of target "${phrase.text}". Speech coverage thresholding applied. `;
+      }
+    } else {
+      // Acoustic Syllabic Envelope Verification (when SpeechRecognition is unavailable/silent)
+      const expectedSyllables = targetUnits.length;
+      const sylDelta = Math.abs(acousticPeaks - expectedSyllables);
+      if (sylDelta === 0) {
+        wordMatchScore = 94;
+        wordMatchSub = `Pacing: ${acousticPeaks}/${expectedSyllables} syllables`;
+      } else if (sylDelta === 1) {
+        wordMatchScore = 78;
+        wordMatchSub = `Pacing Drift: ${acousticPeaks}/${expectedSyllables} syl`;
+      } else {
+        wordMatchScore = Math.max(25, 85 - sylDelta * 20);
+        wordMatchSub = `Pacing Mismatch: ${acousticPeaks}/${expectedSyllables} syl`;
+        transcriptionFeedback = `Acoustic syllable count (${acousticPeaks}) diverged from target phrase (${expectedSyllables}). `;
+      }
+    }
+
+    // Step F: Syllable Segmentation & Tonal Classification
     const tFirst = voicedFrames[0].time;
     const tLast = voicedFrames[voicedFrames.length - 1].time;
     const totalVoicedDuration = Math.max(0.3, tLast - tFirst);
@@ -1105,7 +1233,7 @@ function initPronunciationAssessmentDemo() {
         matchScore = 0.0;
         status = 'fail';
         badge = 'WRONG TONE';
-        toneFeedbackNotes.push(`Syllable [${unit.syl}] had gross pitch inversion: expected ${unit.expectedTone}, heard ${detectedTone}.`);
+        toneFeedbackNotes.push(`Syllable [${unit.syl}] had pitch inversion: expected ${unit.expectedTone}, heard ${detectedTone}.`);
       }
 
       totalToneScore += matchScore;
@@ -1121,33 +1249,37 @@ function initPronunciationAssessmentDemo() {
       });
     });
 
-    // Step F: Compute Composite Pronunciation Metrics
+    // Step G: Compute Composite Pronunciation Metrics
     const toneAccuracy = Math.round((totalToneScore / numUnits) * 100);
     const voicingRatio = Math.min(1.0, voicedFrames.length / (numFrames * 0.45));
     const durationRatio = Math.min(1.0, totalVoicedDuration / 0.85);
 
+    // Composite Pronunciation Score weighted by Tone, Words, and Voicing
     const rawScore = Math.round(
-      0.55 * toneAccuracy +
-      0.30 * (voicingRatio * 100) +
-      0.15 * (durationRatio * 100)
+      0.40 * toneAccuracy +
+      0.40 * wordMatchScore +
+      0.20 * (voicingRatio * 100)
     );
-    const finalScore = Math.max(15, Math.min(98, rawScore));
+    const finalScore = Math.max(12, Math.min(98, rawScore));
 
-    const perVal = Math.max(1.8, Math.min(48.0, (100 - toneAccuracy) * 0.28 + (1 - durationRatio) * 6)).toFixed(1);
+    const perVal = Math.max(1.8, Math.min(52.0, (100 - wordMatchScore) * 0.32 + (100 - toneAccuracy) * 0.28)).toFixed(1);
 
     let grade = 'Native-Level Phonetic Match';
     if (finalScore < 50) grade = 'Substantial Tonal & Phonemic Divergence';
     else if (finalScore < 75) grade = 'Moderate Accent Drift (Review Tone Marks)';
     else if (finalScore < 88) grade = 'Good Convergence (Minor Pitch Drift)';
 
-    let diagnostic = `Speaker median F0 identified at ${Math.round(medianF0)} Hz. Utterance declination slope: ${declinationSlope.toFixed(2)} st/s. Tone Accuracy: ${toneAccuracy}%. `;
+    let diagnostic = `Speaker median F0: ${Math.round(medianF0)} Hz. Utterance declination: ${declinationSlope.toFixed(2)} st/s. Tone Accuracy: ${toneAccuracy}%. Word & Speech Match: ${wordMatchScore}%. `;
+    if (transcriptionFeedback) {
+      diagnostic += transcriptionFeedback;
+    }
     if (toneFeedbackNotes.length === 0) {
-      diagnostic += `All ${numUnits} diacritized tonal targets matched the gold standard alignment. Vowel durations and pitch transitions are native-level.`;
+      diagnostic += `All ${numUnits} diacritized tonal targets matched the gold standard alignment.`;
     } else {
       diagnostic += toneFeedbackNotes.join(' ');
     }
     if (isLiveMic) {
-      diagnostic += ' (Live microphone input evaluated via real-time WebDSP engine).';
+      diagnostic += ' (Live microphone input evaluated via real-time WebDSP & ASR).';
     } else {
       diagnostic += ' (Evaluated from native reference acoustic synthesis).';
     }
@@ -1155,6 +1287,8 @@ function initPronunciationAssessmentDemo() {
     return renderAssessmentReport({
       score: finalScore,
       grade: grade,
+      wordMatch: wordMatchScore,
+      wordMatchSub: wordMatchSub,
       per: `${perVal}%`,
       toneAcc: `${toneAccuracy}%`,
       latencyMs: Math.max(38, Math.round(performance.now() - startTime)),
@@ -1174,6 +1308,13 @@ function initPronunciationAssessmentDemo() {
       scoreNum.className = 'score-number ' + (res.score >= 80 ? 'success' : (res.score >= 55 ? 'warn' : 'danger'));
     }
     if (scoreGrade) scoreGrade.textContent = res.grade;
+    if (wordmatchNum) {
+      wordmatchNum.textContent = `${res.wordMatch}%`;
+      wordmatchNum.className = 'score-number ' + (res.wordMatch >= 75 ? 'success' : (res.wordMatch >= 50 ? 'warn' : 'danger'));
+    }
+    if (wordmatchSub) {
+      wordmatchSub.textContent = res.wordMatchSub || (res.wordMatch >= 75 ? 'Target Prompt Verified' : 'Divergence Detected');
+    }
     if (perNum) perNum.textContent = res.per;
     if (toneNum) toneNum.textContent = res.toneAcc;
     if (latencyNum) latencyNum.textContent = `${res.latencyMs} ms`;
@@ -1198,7 +1339,7 @@ function initPronunciationAssessmentDemo() {
     }
 
     if (waveformStatus) {
-      waveformStatus.textContent = `Completed in ${res.latencyMs}ms! PER: ${res.per} • Tone Accuracy: ${res.toneAcc}`;
+      waveformStatus.textContent = `Completed in ${res.latencyMs}ms! Words: ${res.wordMatch}% • Tone Accuracy: ${res.toneAcc} • PER: ${res.per}`;
     }
   }
 
