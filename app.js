@@ -611,8 +611,38 @@ function initPronunciationAssessmentDemo() {
     return 1.0 - (d[l1][l2] / Math.max(l1, l2));
   }
 
+  // 4b. Expand compound contractions commonly produced by browser ASR (e.g. 'beeni' -> 'bee ni', 'odabo' -> 'o dabo', 'kini' -> 'ki ni')
+  function expandCompoundTokens(heardTokens, targetWords) {
+    if (!heardTokens || !targetWords) return heardTokens || [];
+    const expanded = [];
+    const targetBases = targetWords.map(w => stripAllDiacritics(cleanToken(w)));
+
+    for (let t = 0; t < heardTokens.length; t++) {
+      const hToken = heardTokens[t];
+      const hBase = stripAllDiacritics(cleanToken(hToken));
+      let compoundSplit = null;
+
+      for (let i = 0; i < targetBases.length - 1; i++) {
+        const comb = targetBases[i] + targetBases[i + 1];
+        const combCol = collapseRepeats(targetBases[i]) + collapseRepeats(targetBases[i + 1]);
+        if (hBase === comb || collapseRepeats(hBase) === combCol) {
+          compoundSplit = [hToken.slice(0, targetBases[i].length), hToken.slice(targetBases[i].length)];
+          break;
+        }
+      }
+
+      if (compoundSplit) {
+        expanded.push(...compoundSplit);
+      } else {
+        expanded.push(hToken);
+      }
+    }
+    return expanded;
+  }
+
   // 5. Authentic Yoruba Word Sequence Alignment (Needleman-Wunsch / Levenshtein Dynamic Programming)
   function alignWordSequences(refWords, heardWords) {
+    heardWords = expandCompoundTokens(heardWords, refWords);
     const M = refWords.length;
     const N = heardWords.length;
 
@@ -746,14 +776,18 @@ function initPronunciationAssessmentDemo() {
         if (rClean === hClean) {
           verdict = 'ok';
           weight = 1.0;
-        } else if (rNoTone === hNoTone || rCol === hCol) {
-          verdict = 'CHECK VOWELS';
-          weight = 0.70;
+        } else if (rNoTone === hNoTone || rCol === hCol || rBase === hBase) {
+          // Same lexical root word (e.g. ASR transcribed in ASCII without diacritics like 'beeni' or 'dabo')
+          verdict = 'ok';
+          weight = 1.0;
         } else {
           const sim = computeStringSimilarity(rBase, hBase);
-          if (sim >= 0.65) {
-            verdict = 'SAID DIFFERENTLY';
-            weight = 0.45;
+          if (sim >= 0.72) {
+            verdict = 'ok';
+            weight = 1.0;
+          } else if (sim >= 0.45) {
+            verdict = 'CHECK VOWELS';
+            weight = 0.70;
           } else {
             verdict = 'DIFFERENT';
             weight = 0.0;
@@ -1929,20 +1963,27 @@ function initPronunciationAssessmentDemo() {
     const evaluatedChips = [];
 
     targetUnits.forEach((unit, idx) => {
-      const uStart = tFirst + idx * segmentDuration;
-      const uEnd = uStart + segmentDuration;
-      const uFrames = voicedFrames.filter(v => v.time >= uStart && v.time <= uEnd);
+      // 15% overlap padding on boundaries so vowel onsets/offsets are not clipped
+      const pad = segmentDuration * 0.15;
+      const uStart = Math.max(tFirst, tFirst + idx * segmentDuration - pad);
+      const uEnd = Math.min(tLast, tFirst + (idx + 1) * segmentDuration + pad);
+      let uFrames = voicedFrames.filter(v => v.time >= uStart && v.time <= uEnd);
 
       if (uFrames.length === 0 && !isTeacherAudio) {
-        evaluatedChips.push({
-          syl: unit.syl,
-          expectedTone: unit.expectedTone,
-          detectedTone: 'Omitted',
-          measuredPitch: 'No Voicing',
-          status: 'unvoiced',
-          badge: 'MISSED'
-        });
-        return;
+        const wideFrames = voicedFrames.filter(v => v.time >= uStart - 0.12 && v.time <= uEnd + 0.12);
+        if (wideFrames.length > 0) {
+          uFrames = wideFrames;
+        } else {
+          evaluatedChips.push({
+            syl: unit.syl,
+            expectedTone: unit.expectedTone,
+            detectedTone: 'Omitted',
+            measuredPitch: 'No Voicing',
+            status: 'unvoiced',
+            badge: 'MISSED'
+          });
+          return;
+        }
       }
 
       let detectedTone = unit.expectedTone;
@@ -1950,16 +1991,30 @@ function initPronunciationAssessmentDemo() {
       let unitMedSt = 0;
 
       if (uFrames.length > 0) {
-        const uStSorted = uFrames.map(f => f.semitones).sort((a, b) => a - b);
-        unitMedSt = uStSorted[Math.floor(uStSorted.length / 2)];
-        avgHz = Math.round(uFrames.reduce((acc, f) => acc + f.f0, 0) / uFrames.length);
+        // Select top energy frames (steady-state vowel nucleus)
+        const sortedByRms = [...uFrames].sort((a, b) => b.rms - a.rms);
+        const topFrames = sortedByRms.slice(0, Math.max(3, Math.ceil(sortedByRms.length * 0.70)));
+        const uStSorted = topFrames.map(f => f.semitones).sort((a, b) => a - b);
+        unitMedSt = uStSorted[Math.floor(uStSorted.length / 2)] || 0;
+        avgHz = Math.round(topFrames.reduce((acc, f) => acc + f.f0, 0) / topFrames.length);
 
         if (isTeacherAudio) {
           detectedTone = unit.expectedTone;
         } else {
-          if (unitMedSt > 0.6) detectedTone = 'High';
-          else if (unitMedSt < -2.0) detectedTone = 'Low';
-          else detectedTone = 'Mid';
+          // Conversational Yoruba Tone Classification with natural human margins
+          if (unit.expectedTone === 'High') {
+            if (unitMedSt >= 0.40) detectedTone = 'High';
+            else if (unitMedSt < -1.8) detectedTone = 'Low';
+            else detectedTone = 'Mid';
+          } else if (unit.expectedTone === 'Low') {
+            if (unitMedSt <= -0.80) detectedTone = 'Low';
+            else if (unitMedSt > 1.4) detectedTone = 'High';
+            else detectedTone = 'Mid';
+          } else { // Mid
+            if (unitMedSt > 1.4) detectedTone = 'High';
+            else if (unitMedSt < -1.8) detectedTone = 'Low';
+            else detectedTone = 'Mid';
+          }
         }
       }
 
@@ -1977,7 +2032,8 @@ function initPronunciationAssessmentDemo() {
         (unit.expectedTone === 'Mid' && detectedTone === 'Low') ||
         (unit.expectedTone === 'Low' && detectedTone === 'Mid')
       ) {
-        matchScore = 0.5;
+        // Natural accent drift / near-miss: 75% credit
+        matchScore = 0.75;
         status = 'warn';
         badge = 'NEAR-MISS';
       } else {
@@ -2088,21 +2144,23 @@ function initPronunciationAssessmentDemo() {
               return c.detectedTone === 'High' ? 'H' : (c.detectedTone === 'Low' ? 'L' : 'M');
             });
 
-            const hasFailTone = chipsForWord.some(c => c.status === 'fail');
-            const hasWarnTone = chipsForWord.some(c => c.status === 'warn');
+            const voicedChips = chipsForWord.filter(c => c.status !== 'unvoiced');
+            const avgWordScore = voicedChips.reduce((sum, c) => {
+              return sum + (c.status === 'verified' ? 1.0 : (c.status === 'warn' ? 0.75 : 0.0));
+            }, 0) / Math.max(1, voicedChips.length);
 
-            if (hasFailTone) {
-              verdict = 'DIFFERENT';
-              heardDisplay = '(pitch divergence)';
-              weight = 0.1;
-            } else if (hasWarnTone) {
-              verdict = 'CHECK VOWELS';
-              heardDisplay = stripTones(w.target.toLowerCase()) || '(tone drift)';
-              weight = 0.65;
-            } else {
+            if (avgWordScore >= 0.70) {
               verdict = 'ok';
               heardDisplay = w.target.toLowerCase();
               weight = 1.0;
+            } else if (avgWordScore >= 0.35) {
+              verdict = 'CHECK VOWELS';
+              heardDisplay = stripTones(w.target.toLowerCase()) || w.target.toLowerCase();
+              weight = 0.75;
+            } else {
+              verdict = 'DIFFERENT';
+              heardDisplay = '(pitch divergence)';
+              weight = 0.2;
             }
           }
 
