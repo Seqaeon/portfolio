@@ -701,6 +701,58 @@
                   <strong>Diagnostic Report:</strong> <span id="diagnostic-feedback-text">Acoustic alignment confident across 118h speaker-disjoint acoustic checkpoint. High tone contour on [bá] and vowel articulation on [sọ̀rọ̀] aligned within 12ms of ground truth.</span>
                 </div>
               </div>
+
+              <!-- GitHub Release & Engine Architecture Drawer -->
+              <div class="engine-release-drawer">
+                <div class="engine-release-header">
+                  <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <span class="engine-release-badge">Release v0.6.0</span>
+                    <strong style="color: var(--text-heading); font-family: var(--font-heading); font-size: 0.95rem;">Engine Architecture &amp; Trained Checkpoints</strong>
+                  </div>
+                  <a href="https://github.com/Seqaeon/yoruba-pronunciation-engine" target="_blank" rel="noopener noreferrer" class="social-link" style="padding: 0.25rem 0.65rem; font-size: 0.75rem;" title="View GitHub Repository">
+                    <span>GitHub: Seqaeon/yoruba-pronunciation-engine</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                  </a>
+                </div>
+
+                <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.85rem; line-height: 1.5;">
+                  Trained across 118 hours of diacritized Yoruba speech (2,702 speakers). The live widget below runs our calibrated DSP pitch &amp; tone extraction in real time (Praat YIN + utterance-level register normalization + downdrift removal).
+                </p>
+
+                <div class="engine-assets-grid">
+                  <div class="engine-asset-card">
+                    <span class="engine-asset-name">tone_sequence.pt</span>
+                    <span class="engine-asset-desc">2-layer BiGRU sequence tone model (79.0% utterance holdout)</span>
+                    <span class="engine-asset-size">1.1 MB • In Release v0.6.0</span>
+                  </div>
+                  <div class="engine-asset-card">
+                    <span class="engine-asset-name">yoruba_acoustic.zip</span>
+                    <span class="engine-asset-desc">118h diacritized acoustic model (MFA GMM-HMM + neural aligner)</span>
+                    <span class="engine-asset-size">92 MB • In Release v0.6.0</span>
+                  </div>
+                  <div class="engine-asset-card">
+                    <span class="engine-asset-name">tone_classifier.joblib</span>
+                    <span class="engine-asset-desc">Utterance-tuned gradient boosting classifier (2,702 speakers)</span>
+                    <span class="engine-asset-size">3.12 MB • In Release v0.6.0</span>
+                  </div>
+                  <div class="engine-asset-card">
+                    <span class="engine-asset-name">vowel_classifier.joblib</span>
+                    <span class="engine-asset-desc">wav2vec2-xlsr learned vowel formant verifier (substitutions)</span>
+                    <span class="engine-asset-size">11.5 MB • In Release v0.6.0</span>
+                  </div>
+                </div>
+
+                <div class="engine-mode-selector">
+                  <div class="engine-mode-label">
+                    <span>⚡ <strong>Evaluation Engine:</strong> Client-Side WebDSP + YIN Pitch Extractor (Active)</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <a href="https://github.com/Seqaeon/yoruba-pronunciation-engine/releases/tag/v0.6.0" target="_blank" rel="noopener noreferrer" style="font-size: 0.75rem; color: var(--accent-purple); text-decoration: underline;">
+                      Browse v0.6.0 Release Assets &rarr;
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
