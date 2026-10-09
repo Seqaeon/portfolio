@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pearse Jim | Machine Learning Research Engineer</title>
+  <meta name="description" content="Portfolio of Pearse Jim — Machine Learning Research Engineer working on hardware-aware model efficiency, low-resource speech, and robust agent evaluation harnesses. 4 papers in 2026 (arXiv:2609.39277, arXiv:2606.26488, WiML @ ICML, ICBINB @ ICLR, AAAI LM4UC).">
+  <meta name="keywords" content="Pearse Jim, Seqaeon, Machine Learning Research Engineer, Model Compression, Edge AI, Quantization, Yoruba Speech, Low-Resource NLP, Agent Harness, caseflow, ML Collective">
+  <meta name="author" content="Pearse Jim">
+  
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Pearse Jim | Machine Learning Research Engineer">
+  <meta property="og:description" content="I build the measurement before the model. Compressing recursive reasoners to 4MB, low-resource speech engines, and 100% provenance agent harnesses.">
+  <meta property="og:url" content="https://github.com/Seqaeon">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Favicon SVG (Purple) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23090614'/><text x='50' y='66' font-size='48' font-family='sans-serif' font-weight='800' fill='%23c084fc' text-anchor='middle'>PJ</text></svg>">
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="ambient-glow glow-3"></div>
+
+  <!-- Navigation Bar -->
+  <header class="site-header" id="navbar">
+    <div class="nav-container">
+      <a href="#hero" class="brand-logo" id="brand-logo" aria-label="Pearse Jim Home">
+        <span class="logo-mark">PJ</span>
+        <span class="logo-text">Pearse Jim<span class="accent-dot">.</span></span>
+        <span class="role-pill">ML Research</span>
+      </a>
+
+      <!-- Domain Focus Switcher -->
+      <div class="lens-switcher" role="radiogroup" aria-label="Domain Focus Filter">
+        <button type="button" class="lens-btn active" data-lens="all" id="lens-all" aria-checked="true" role="radio">
+          <span class="lens-icon">⚡</span> All Research
+        </button>
+        <button type="button" class="lens-btn" data-lens="efficiency" id="lens-efficiency" aria-checked="false" role="radio">
+          <span class="lens-icon">🔬</span> Edge Efficiency
+        </button>
+        <button type="button" class="lens-btn" data-lens="speech" id="lens-speech" aria-checked="false" role="radio">
+          <span class="lens-icon">🎙️</span> Speech &amp; Audio
+        </button>
+        <button type="button" class="lens-btn" data-lens="agents" id="lens-agents" aria-checked="false" role="radio">
+          <span class="lens-icon">🤖</span> Agents &amp; ML
+        </button>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="nav-links" id="nav-menu">
+        <a href="#research" class="nav-item">Research</a>
+        <a href="#demos" class="nav-item">Workbenches</a>
+        <a href="#publications" class="nav-item">Papers</a>
+        <a href="#projects" class="nav-item">Systems</a>
+        <a href="#experience" class="nav-item">Timeline</a>
+        <a href="#terminal-section" class="nav-item">Terminal</a>
+        <a href="#contact" class="nav-item">Contact</a>
+      </nav>
+
+      <!-- Action items -->
+      <div class="nav-actions">
+        <a href="assets/pearse_jim_cv.pdf" download="Pearse_Jim_CV.pdf" class="btn btn-outline cv-btn" id="cv-direct-download" title="Download Pearse Jim's CV">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>CV (PDF)</span>
+        </a>
+
+        <button type="button" class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Color Theme">
+          <span class="theme-icon light-icon">☀️</span>
+          <span class="theme-icon dark-icon">🌙</span>
+        </button>
+
+        <!-- Mobile hamburger toggle -->
+        <button type="button" class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Navigation Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-drawer" id="mobile-drawer">
+    <div class="mobile-lens-container">
+      <span class="mobile-lens-label">Filter Focus:</span>
+      <div class="mobile-lens-group">
+        <button class="lens-btn-mob active" data-lens="all">All</button>
+        <button class="lens-btn-mob" data-lens="efficiency">Efficiency</button>
+        <button class="lens-btn-mob" data-lens="speech">Speech</button>
+        <button class="lens-btn-mob" data-lens="agents">Agents</button>
+      </div>
+    </div>
+    <nav class="mobile-nav-links">
+      <a href="#research" class="mobile-nav-link">Research Pillars</a>
+      <a href="#demos" class="mobile-nav-link">Interactive Workbenches</a>
+      <a href="#publications" class="mobile-nav-link">2026 Publications</a>
+      <a href="#projects" class="mobile-nav-link">Engineered Systems</a>
+      <a href="#experience" class="mobile-nav-link">Career Experience</a>
+      <a href="#skills" class="mobile-nav-link">Skills &amp; Methodology</a>
+      <a href="#terminal-section" class="mobile-nav-link">Research CLI</a>
+      <a href="#contact" class="mobile-nav-link">Get In Touch</a>
+    </nav>
+    <div class="mobile-cv-actions">
+      <a href="assets/pearse_jim_cv.pdf" download="Pearse_Jim_CV.pdf" class="btn btn-primary btn-block">Download Pearse Jim's CV (PDF)</a>
+    </div>
+  </div>
+
+  <main id="main-content">
+    <!-- Hero Section -->
+    <section class="hero-section" id="hero">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <!-- Availability Pill -->
+          <div class="hero-badge">
+            <span class="pulse-indicator"></span>
+            <span class="badge-text">Available for ML Research &amp; Applied AI Roles</span>
+          </div>
+
+          <h1 class="hero-title">
+            Hi, I'm <span class="gradient-text">Pearse Jim</span>
+          </h1>
+
+          <p class="hero-subtitle">
+            <span class="highlight-text">Machine Learning Research Engineer</span>
+          </p>
+
+          <p class="hero-philosophy">
+            <em>"I build the measurement before the model."</em> Whether designing speaker-disjoint splits that stop tone classifiers from memorizing voices, tracking latent trajectory drift to fit recursive reasoners onto <strong>4&nbsp;MB microcontrollers</strong>, or crafting <strong>100% provenance-checked agent harnesses</strong>, I prioritize empirical truth over ungrounded hype.
+          </p>
+
+          <div class="hero-dual-track">
+            <div class="track-card research-track" data-track="efficiency">
+              <div class="track-header">
+                <span class="track-dot"></span>
+                <strong>Model Efficiency &amp; Edge AI</strong>
+              </div>
+              <p>Latent-state reasoning dynamics, carry-trajectory fidelity, INT4/INT8 calibration, and physical MCU SRAM budgets.</p>
+            </div>
+            <div class="track-card speech-track" data-track="speech">
+              <div class="track-header">
+                <span class="track-dot"></span>
+                <strong>Low-Resource Speech &amp; NLP</strong>
+              </div>
+              <p>Acoustic modeling on 118 h diacritized speech, sub-second distilled forced aligners, and error cascade analysis.</p>
+            </div>
+          </div>
+
+          <div class="hero-cta-group">
+            <a href="#demos" class="btn btn-primary" id="btn-hero-demos">
+              <span>Try Interactive Workbenches</span>
+              <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <a href="#publications" class="btn btn-secondary" id="btn-hero-papers">
+              <span>View Papers (2026)</span>
+            </a>
+            <a href="#terminal-section" class="btn btn-ghost" id="btn-hero-terminal">
+              <span>&gt; Open Terminal</span>
+            </a>
+          </div>
+
+          <!-- Social / Contact Quick Links -->
+          <div class="hero-social-links">
+            <a href="https://github.com/Seqaeon" target="_blank" rel="noopener noreferrer" class="social-link" title="GitHub: @Seqaeon">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              <span>github.com/Seqaeon</span>
+            </a>
+            <a href="https://linkedin.com/in/pearse-jim" target="_blank" rel="noopener noreferrer" class="social-link" title="LinkedIn: @pearse-jim">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+              <span>linkedin.com/in/pearse-jim</span>
+            </a>
+            <a href="mailto:pearsejim01@gmail.com" class="social-link" title="Email Pearse Jim">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <span>pearsejim01@gmail.com</span>
+            </a>
+            <div class="tz-badge" id="tz-live-badge">
+              <span class="clock-icon">🕒</span>
+              <span id="tz-time-display">Nigeria (UTC+1): Calculating...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Stats Visual Board -->
+        <div class="hero-stats-panel">
+          <div class="stats-glass-card">
+            <div class="panel-header">
+              <div class="panel-dots">
+                <span class="p-dot red"></span><span class="p-dot yellow"></span><span class="p-dot green"></span>
+              </div>
+              <span class="panel-title">empirical_benchmarks.json</span>
+              <span class="panel-badge">Peer Verified</span>
+            </div>
+
+            <div class="stat-items-grid">
+              <div class="stat-card" data-metric="papers">
+                <div class="stat-number">4</div>
+                <div class="stat-label">2026 Papers</div>
+                <div class="stat-sub">arXiv (2) &bull; WiML@ICML &bull; LM4UC@AAAI</div>
+              </div>
+
+              <div class="stat-card" data-metric="hardware">
+                <div class="stat-number">4 <span class="unit">MB</span></div>
+                <div class="stat-label">Microcontroller Target</div>
+                <div class="stat-sub">Full recursive reasoner without retraining</div>
+              </div>
+
+              <div class="stat-card" data-metric="speech">
+                <div class="stat-number">118 <span class="unit">hrs</span></div>
+                <div class="stat-label">Diacritized Speech</div>
+                <div class="stat-sub">Yoruba Acoustic Model (193k utterances)</div>
+              </div>
+
+              <div class="stat-card" data-metric="speedup">
+                <div class="stat-number">4.7<span class="unit">×</span></div>
+                <div class="stat-label">Realtime on CPU</div>
+                <div class="stat-sub">0.44s vs 14.3s MFA baseline (32× faster)</div>
+              </div>
+
+              <div class="stat-card" data-metric="provenance">
+                <div class="stat-number">100<span class="unit">%</span></div>
+                <div class="stat-label">Provenance Integrity</div>
+                <div class="stat-sub">SEC 10-K Agent Harness across 6 filers</div>
+              </div>
+
+              <div class="stat-card" data-metric="calibration">
+                <div class="stat-number">0.029</div>
+                <div class="stat-label">Expected Calibration Error</div>
+                <div class="stat-sub">caseflow tariff classifier on 220k rulings</div>
+              </div>
+            </div>
+
+            <!-- Terminal mini-snippet preview -->
+            <div class="panel-cli-preview">
+              <div class="cli-line">
+                <span class="cli-prompt">$</span> <span class="cli-cmd">python evaluate_edge_fidelity.py --budget 4MB</span>
+              </div>
+              <div class="cli-result success">
+                ✓ Carry-trajectory cosine fidelity: 0.941 | Exact puzzle: 98.4%
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Research Innovations & Methodology Section -->
+    <section class="section-container" id="research">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Core Research Pillars</span>
+          <h2 class="section-title">Hardware Constraints Meet Algorithmic Rigor</h2>
+          <p class="section-description">
+            Most machine learning benchmarks treat compute as unbounded and evaluation as aggregate cross-entropy. My research focuses on the two hardest failure modes: <strong>what breaks when you compress models to physical edge budgets</strong>, and <strong>what gets silenced when low-resource languages lack faithful representations</strong>.
+          </p>
+        </div>
+
+        <div class="research-pillars-grid">
+          <!-- Pillar 1 -->
+          <article class="pillar-card">
+            <div class="pillar-icon-box cyan">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+            </div>
+            <h3 class="pillar-title">1. Edge Compression &amp; Trajectory Fidelity</h3>
+            <p class="pillar-summary">
+              Investigating the hidden failure modes of recursive reasoning under aggressive quantization, pruning, and linear attention.
+            </p>
+            <ul class="pillar-findings">
+              <li><strong>The Illusion of Token Accuracy:</strong> Under naive INT4, cell accuracy remains deceptively high (88.6%) while puzzle-exact reasoning collapses to absolute 0.0%.</li>
+              <li><strong>Carry-Trajectory Fidelity:</strong> Formulated a label-free cosine metric tracking latent state progression that forecasts reasoning collapse before full evaluation.</li>
+              <li><strong>Physical Deployment:</strong> Flash-streamed embeddings bypass 99.4 MB SRAM bottlenecks; INT8 at single recursion cycles cuts FLOPs by 6× for 8 MB SoCs.</li>
+            </ul>
+            <div class="pillar-footer">
+              <span class="paper-ref">arXiv:2609.39277 &amp; arXiv:2606.26488 · with Prof. Virginia Smith (CMU) &amp; Steven Kolawole</span>
+            </div>
+          </article>
+
+          <!-- Pillar 2 -->
+          <article class="pillar-card">
+            <div class="pillar-icon-box emerald">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </div>
+            <h3 class="pillar-title">2. Low-Resource African Speech &amp; Tone</h3>
+            <p class="pillar-summary">
+              Building foundational acoustic models and sub-second pronunciation assessment for complex tonal languages like Yoruba and Hausa.
+            </p>
+            <ul class="pillar-findings">
+              <li><strong>Representation Over Corpus Volume:</strong> Replacing 39 manual acoustic features with wav2vec2 lifted macro F1 from 0.432 to 0.811; BiGRU temporal modeling boosted tone accuracy to 79.6%.</li>
+              <li><strong>Distilled Neural Aligner:</strong> Swapped MFA GMM-HMM for a 2 MB distilled neural head, slashing latency from 14.3s to 0.44s (4.7× realtime on CPU).</li>
+              <li><strong>Cascading Pipeline Failure:</strong> Documented 95.6% translation collapse in educational ASR where tone error hit 100%.</li>
+            </ul>
+            <div class="pillar-footer">
+              <span class="paper-ref">Accepted at WiML @ ICML 2026 &amp; ICBINB @ ICLR 2026</span>
+            </div>
+          </article>
+
+          <!-- Pillar 3 -->
+          <article class="pillar-card">
+            <div class="pillar-icon-box purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            </div>
+            <h3 class="pillar-title">3. Modular Routing &amp; Provable Agent Evaluation</h3>
+            <p class="pillar-summary">
+              Challenging parameter bloat through context-aware routing and eliminating hallucination via multi-tiered provenance harnesses.
+            </p>
+            <ul class="pillar-findings">
+              <li><strong>Remix, Don’t Expand:</strong> Routing directly over a compact 64-dim base matched 512-dim baselines with 8× fewer active dimensions and 82.5% fewer parameters.</li>
+              <li><strong>SEC 10-K Agent Harness:</strong> Benchmarked LangGraph vs Think-Act-Observe over 12 tasks with exact XBRL ground truth, catching silent fiscal year mismatch bugs.</li>
+              <li><strong>Autonomy Calibration:</strong> In caseflow, calibrated confidence (ECE 0.029) lets systems auto-accept 43.9% of rulings at 90.8% accuracy.</li>
+            </ul>
+            <div class="pillar-footer">
+              <span class="paper-ref">Accepted at LM4UC @ AAAI 2026 · caseflow &amp; SEC Harness</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Demos Section -->
+    <section class="section-container demos-section" id="demos">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Interactive Workbenches</span>
+          <h2 class="section-title">Hands-On Research Visualizers</h2>
+          <p class="section-description">
+            Experience the empirical phenomena firsthand: see how quantization destroys recursive reasoning, explore Yoruba tonal contours, and simulate the 3-stage tariff classification cascade.
+          </p>
+        </div>
+
+        <!-- Interactive Tabs for Demos -->
+        <div class="demo-tabs-nav" role="tablist">
+          <button type="button" class="demo-tab-btn active" role="tab" aria-selected="true" data-demo="trajectory" id="tab-trajectory">
+            <span class="tab-badge">arXiv:2606.26488</span>
+            <span>1. Trajectory Fidelity Simulator</span>
+          </button>
+          <button type="button" class="demo-tab-btn" role="tab" aria-selected="false" data-demo="tone" id="tab-tone">
+            <span class="tab-badge">Learner App</span>
+            <span>2. Yoruba Learner &amp; Speech Engine</span>
+          </button>
+          <button type="button" class="demo-tab-btn" role="tab" aria-selected="false" data-demo="tariff" id="tab-tariff">
+            <span class="tab-badge">caseflow (277 tests)</span>
+            <span>3. Tariff Cascade Classifier</span>
+          </button>
+        </div>
+
+        <!-- Demo Display Area -->
+        <div class="demo-container">
+          <!-- DEMO 1: Carry-Trajectory Fidelity Simulator -->
+          <div class="demo-panel active" id="demo-trajectory-panel" role="tabpanel">
+            <div class="demo-grid">
+              <div class="demo-controls-col">
+                <h3 class="demo-panel-title">Edge Compression &amp; Reasoning Collapse</h3>
+                <p class="demo-explainer">
+                  Select a quantization scheme below to see how compression affects <strong>local token accuracy</strong> versus <strong>global multi-step reasoning</strong> across 16 recurrence steps.
+                </p>
+
+                <div class="control-group">
+                  <label class="control-label" for="quant-scheme-select">Quantization Strategy:</label>
+                  <div class="button-radio-group" id="quant-scheme-select">
+                    <button class="radio-btn active" data-quant="fp32">FP32 Full Precision (126 MB)</button>
+                    <button class="radio-btn" data-quant="naive-int4">Naive INT4 Uniform (4 MB)</button>
+                    <button class="radio-btn" data-quant="calibrated-int4">Calibrated INT4 + Trajectory Fidelity (4 MB)</button>
+                    <button class="radio-btn" data-quant="int8-cycle">INT8 Single Recursion Cycle (8 MB)</button>
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="task-select">Evaluation Task:</label>
+                  <select id="task-select" class="form-select">
+                    <option value="sudoku">Sudoku Latent Reasoning (Step-by-step Constraint)</option>
+                    <option value="maze">Recursive Maze Pathfinding</option>
+                    <option value="arithmetic">Multi-digit Carry Propagation</option>
+                  </select>
+                </div>
+
+                <div class="metrics-callout" id="trajectory-metrics">
+                  <div class="metric-row">
+                    <span class="m-label">Memory Footprint:</span>
+                    <span class="m-val" id="metric-mem">126 MB (Full Model)</span>
+                  </div>
+                  <div class="metric-row">
+                    <span class="m-label">Local Token Accuracy:</span>
+                    <span class="m-val success" id="metric-local">99.2%</span>
+                  </div>
+                  <div class="metric-row">
+                    <span class="m-label">Puzzle-Exact Reasoning:</span>
+                    <span class="m-val success" id="metric-exact">98.4%</span>
+                  </div>
+                  <div class="metric-row">
+                    <span class="m-label">Carry-Trajectory Cosine:</span>
+                    <span class="m-val success" id="metric-cosine">1.000 (Reference)</span>
+                  </div>
+                </div>
+
+                <div class="demo-alert" id="trajectory-alert">
+                  <span class="alert-icon">💡</span>
+                  <span class="alert-text" id="trajectory-alert-text">Full precision reference: recursive states remain stable across deep reasoning rollouts.</span>
+                </div>
+              </div>
+
+              <div class="demo-visual-col">
+                <div class="chart-wrapper">
+                  <div class="chart-header">
+                    <span class="chart-title">Latent State Cosine Drift Over Recursion Depth (T=1 to 16)</span>
+                    <span class="chart-legend">
+                      <span class="legend-item"><span class="dot fp32"></span> Baseline FP32</span>
+                      <span class="legend-item"><span class="dot current"></span> Current Selection</span>
+                    </span>
+                  </div>
+                  <!-- SVG Dynamic Chart Canvas -->
+                  <div class="svg-container">
+                    <svg id="trajectory-chart" viewBox="0 0 600 300" width="100%" height="100%">
+                      <line x1="50" y1="30" x2="570" y2="30" stroke="var(--border-subtle)" stroke-dasharray="4"/>
+                      <line x1="50" y1="90" x2="570" y2="90" stroke="var(--border-subtle)" stroke-dasharray="4"/>
+                      <line x1="50" y1="150" x2="570" y2="150" stroke="var(--border-subtle)" stroke-dasharray="4"/>
+                      <line x1="50" y1="210" x2="570" y2="210" stroke="var(--border-subtle)" stroke-dasharray="4"/>
+                      <line x1="50" y1="270" x2="570" y2="270" stroke="var(--border-strong)"/>
+                      <line x1="50" y1="20" x2="50" y2="270" stroke="var(--border-strong)"/>
+                      <text x="20" y="35" class="chart-axis-label">1.0</text>
+                      <text x="20" y="95" class="chart-axis-label">0.8</text>
+                      <text x="20" y="155" class="chart-axis-label">0.6</text>
+                      <text x="20" y="215" class="chart-axis-label">0.4</text>
+                      <text x="20" y="275" class="chart-axis-label">0.0</text>
+                      <text x="50" y="292" class="chart-axis-label">T=1</text>
+                      <text x="180" y="292" class="chart-axis-label">T=4</text>
+                      <text x="310" y="292" class="chart-axis-label">T=8</text>
+                      <text x="440" y="292" class="chart-axis-label">T=12</text>
+                      <text x="550" y="292" class="chart-axis-label">T=16</text>
+                      <path id="path-baseline" d="M 50 30 Q 300 32 570 34" fill="none" stroke="rgba(56, 189, 248, 0.4)" stroke-width="2" stroke-dasharray="5,5"/>
+                      <path id="path-dynamic" d="M 50 30 Q 300 32 570 34" fill="none" stroke="#38bdf8" stroke-width="3.5"/>
+                      <g id="chart-points"></g>
+                    </svg>
+                  </div>
+                  <div class="chart-footnote">
+                    Empirical finding: Naive INT4 causes catastrophic compounding drift at step 7, while per-channel calibration maintains &gt;0.92 cosine fidelity at 4 MB!
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- DEMO 2: Yoruba Tone & Speech Engine -->
+          <div class="demo-panel" id="demo-tone-panel" role="tabpanel">
+            <div class="demo-grid">
+              <div class="demo-controls-col">
+                <h3 class="demo-panel-title">Yoruba Learner: Tonal Acoustic Modeling &amp; Latency Ablation</h3>
+                <p class="demo-explainer">
+                  In Yoruba, a single syllable like <em>"ba"</em> changes completely depending on pitch contour (High <strong>bá</strong> = meet/perch, Mid <strong>ba</strong> = hide, Low <strong>bà</strong> = alight). Listen or probe the pitch contours and see how replacing MFA with our 2 MB neural head eliminated a 14-second bottleneck.
+                </p>
+
+                <div class="control-group">
+                  <label class="control-label">Select Yoruba Syllable &amp; Tone:</label>
+                  <div class="tone-selector-grid">
+                    <button class="tone-card active" data-word="bá" data-tone="H" data-meaning="to meet / overtake" data-f0="high">
+                      <span class="tone-symbol">Ó (High)</span>
+                      <span class="tone-word">bá</span>
+                      <span class="tone-gloss">"meet / perch"</span>
+                    </button>
+                    <button class="tone-card" data-word="ba" data-tone="M" data-meaning="to hide / lurk" data-f0="mid">
+                      <span class="tone-symbol">O (Mid)</span>
+                      <span class="tone-word">ba</span>
+                      <span class="tone-gloss">"hide / ambushed"</span>
+                    </button>
+                    <button class="tone-card" data-word="bà" data-tone="L" data-meaning="to alight / perch on" data-f0="low">
+                      <span class="tone-symbol">Ò (Low)</span>
+                      <span class="tone-word">bà</span>
+                      <span class="tone-gloss">"alight / land"</span>
+                    </button>
+                    <button class="tone-card" data-word="kọ́" data-tone="H" data-meaning="to teach / build" data-f0="high">
+                      <span class="tone-symbol">Ó (High)</span>
+                      <span class="tone-word">kọ́</span>
+                      <span class="tone-gloss">"build / teach"</span>
+                    </button>
+                    <button class="tone-card" data-word="kọ" data-tone="M" data-meaning="to write / sing" data-f0="mid">
+                      <span class="tone-symbol">O (Mid)</span>
+                      <span class="tone-word">kọ</span>
+                      <span class="tone-gloss">"write / sing"</span>
+                    </button>
+                    <button class="tone-card" data-word="kọ̀" data-tone="L" data-meaning="to refuse / reject" data-f0="low">
+                      <span class="tone-symbol">Ò (Low)</span>
+                      <span class="tone-word">kọ̀</span>
+                      <span class="tone-gloss">"refuse / reject"</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="audio-synth-box">
+                  <button type="button" class="btn btn-primary" id="btn-play-tone">
+                    <span>🔊 Synthesize &amp; Play Tone</span>
+                  </button>
+                  <span class="audio-feedback" id="tone-play-status">Audio API ready</span>
+                </div>
+
+                <div class="metrics-callout">
+                  <div class="metric-row">
+                    <span class="m-label">Selected Word:</span>
+                    <span class="m-val accent" id="tone-selected-word">bá (High Tone)</span>
+                  </div>
+                  <div class="metric-row">
+                    <span class="m-label">F0 Pitch Contour:</span>
+                    <span class="m-val" id="tone-selected-contour">Rising / High Pitch (240 - 280 Hz)</span>
+                  </div>
+                  <div class="metric-row">
+                    <span class="m-label">Meaning:</span>
+                    <span class="m-val" id="tone-selected-meaning">to meet / overtake</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Latency & Architecture Comparison Column -->
+              <div class="demo-visual-col">
+                <div class="comparison-card">
+                  <div class="comp-header">
+                    <h4>Forced Aligner Latency Breakdown</h4>
+                    <span class="comp-badge">Ablation Result</span>
+                  </div>
+                  
+                  <div class="latency-bars">
+                    <div class="latency-item">
+                      <div class="lat-labels">
+                        <span class="lat-name">Montreal Forced Aligner (Kaldi GMM-HMM)</span>
+                        <span class="lat-time danger">14.30 s</span>
+                      </div>
+                      <div class="progress-bar-wrapper">
+                        <div class="bar-fill mfa-fill" style="width: 100%;">
+                          <span class="bar-label">96% corpus setup overhead</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="latency-item">
+                      <div class="lat-labels">
+                        <span class="lat-name">Pearse's Distilled Neural Head (wav2vec2 + Viterbi)</span>
+                        <span class="lat-time success">0.44 s</span>
+                      </div>
+                      <div class="progress-bar-wrapper">
+                        <div class="bar-fill neural-fill" style="width: 3.1%;">
+                          <span class="bar-label">4.7× Realtime on CPU</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="stats-mini-row">
+                    <div class="s-box">
+                      <span class="s-num">32.5×</span>
+                      <span class="s-desc">Latency Reduction</span>
+                    </div>
+                    <div class="s-box">
+                      <span class="s-num">2 MB</span>
+                      <span class="s-desc">Distilled Head Size</span>
+                    </div>
+                    <div class="s-box">
+                      <span class="s-num">86.2%</span>
+                      <span class="s-desc">Boundaries &le;20ms of MFA</span>
+                    </div>
+                  </div>
+
+                  <div class="tone-canvas-wrapper">
+                    <div class="canvas-header">F0 Pitch Track Simulation (Parselmouth / Praat)</div>
+                    <canvas id="f0-canvas" width="480" height="140"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Live Pronunciation Assessment & Acoustic Scoring Pipeline -->
+            <div class="assessment-module-card">
+              <div class="assessment-header">
+                <div class="assessment-title-group">
+                  <span class="assessment-badge">Interactive System Demo</span>
+                  <h4 class="assessment-title">Live Pronunciation &amp; Tone Assessment Pipeline</h4>
+                  <p class="assessment-desc">
+                    Record your voice via microphone or run sample audio to test the end-to-end 8-stage Yoruba evaluation pipeline. Measures Phone Error Rate (PER), extracts F0 tone contours, and returns sub-second acoustic assessment on commodity CPU hardware.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Target Phrase Selection -->
+              <div class="assessment-phrase-box">
+                <label class="control-label">Select Target Yoruba Sentence:</label>
+                <div class="assessment-chips-grid">
+                  <button type="button" class="phrase-chip active" data-phrase="ba-mi-soro" data-text="Bá mi sọ̀rọ̀" data-translation="Speak with me" data-tones="High • Mid • Low • Low">
+                    <span class="phrase-yo">Bá mi sọ̀rọ̀</span>
+                    <span class="phrase-tone-hint">H - M - L - L</span>
+                    <span class="phrase-en">"Speak with me"</span>
+                  </button>
+                  <button type="button" class="phrase-chip" data-phrase="e-kaabo" data-text="Ẹ káàbọ̀ sí ilé" data-translation="Welcome home" data-tones="Mid • High-Low • High • Mid-High">
+                    <span class="phrase-yo">Ẹ káàbọ̀ sí ilé</span>
+                    <span class="phrase-tone-hint">M - HL - H - MH</span>
+                    <span class="phrase-en">"Welcome home"</span>
+                  </button>
+                  <button type="button" class="phrase-chip" data-phrase="omode-ko" data-text="Ọmọdé kọ́ ẹ̀kọ́" data-translation="The child learns a lesson" data-tones="Low-Mid-High • High • Low-High">
+                    <span class="phrase-yo">Ọmọdé kọ́ ẹ̀kọ́</span>
+                    <span class="phrase-tone-hint">LMH - H - LH</span>
+                    <span class="phrase-en">"The child learns"</span>
+                  </button>
+                  <button type="button" class="phrase-chip" data-phrase="ounje-pon" data-text="Oúnjẹ ti pọ́n" data-translation="The food is ready / ripe" data-tones="Mid-High-Low • Mid • High">
+                    <span class="phrase-yo">Oúnjẹ ti pọ́n</span>
+                    <span class="phrase-tone-hint">MHL - M - H</span>
+                    <span class="phrase-en">"The food is ready"</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Interactive Controls (Mic Record & Sample Audio) -->
+              <div class="assessment-actions-row">
+                <button type="button" class="btn btn-primary" id="btn-mic-record">
+                  <span class="mic-icon">🎤</span>
+                  <span id="record-btn-text">Record Voice (Microphone)</span>
+                </button>
+                <button type="button" class="btn btn-secondary" id="btn-sample-assess">
+                  <span>▶️ Run Sample Audio Assessment</span>
+                </button>
+                <div class="recording-indicator" id="recording-indicator" style="display: none;">
+                  <span class="rec-dot"></span>
+                  <span id="rec-status-text">Listening... Speak now (3s)</span>
+                </div>
+              </div>
+
+              <!-- Live Audio Waveform Canvas -->
+              <div class="waveform-box">
+                <canvas id="assessment-waveform-canvas" width="800" height="90"></canvas>
+                <div class="waveform-status" id="waveform-status">Ready. Click "Record Voice" or "Run Sample Audio Assessment".</div>
+              </div>
+
+              <!-- Pipeline Execution Telemetry (Animated Real-Time Progress) -->
+              <div class="pipeline-telemetry" id="pipeline-telemetry" style="display: none;">
+                <div class="telemetry-header">
+                  <span>Inference Pipeline Telemetry</span>
+                  <span class="telemetry-total" id="telemetry-total-time">438 ms (4.7× Real-Time on CPU)</span>
+                </div>
+                <div class="telemetry-steps">
+                  <div class="telemetry-step" id="tel-step-1">
+                    <span class="tel-icon">✓</span>
+                    <span class="tel-name">16kHz &amp; Silero VAD</span>
+                    <span class="tel-time">18 ms</span>
+                  </div>
+                  <div class="telemetry-step" id="tel-step-2">
+                    <span class="tel-icon">✓</span>
+                    <span class="tel-name">wav2vec2 Acoustic Distillation</span>
+                    <span class="tel-time">186 ms</span>
+                  </div>
+                  <div class="telemetry-step" id="tel-step-3">
+                    <span class="tel-icon">✓</span>
+                    <span class="tel-name">2 MB Neural Head Viterbi Alignment</span>
+                    <span class="tel-time">124 ms</span>
+                  </div>
+                  <div class="telemetry-step" id="tel-step-4">
+                    <span class="tel-icon">✓</span>
+                    <span class="tel-name">F0 Tone Extraction &amp; Context BiGRU</span>
+                    <span class="tel-time">110 ms</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Assessment Results Dashboard -->
+              <div class="assessment-results-panel" id="assessment-results-panel" style="display: none;">
+                <div class="results-summary-grid">
+                  <div class="score-card main-score">
+                    <span class="score-label">Pronunciation Score</span>
+                    <span class="score-number" id="res-score-num">95%</span>
+                    <span class="score-grade" id="res-score-grade">Native-Level Phonetic Match</span>
+                  </div>
+                  <div class="score-card">
+                    <span class="score-label">Phone Error Rate (PER)</span>
+                    <span class="score-number success" id="res-per-num">2.8%</span>
+                    <span class="score-sub">vs 24.1% unconstrained</span>
+                  </div>
+                  <div class="score-card">
+                    <span class="score-label">Tone Contour Accuracy</span>
+                    <span class="score-number success" id="res-tone-num">97.4%</span>
+                    <span class="score-sub">High/Mid/Low Verified</span>
+                  </div>
+                  <div class="score-card">
+                    <span class="score-label">Inference Latency</span>
+                    <span class="score-number accent" id="res-latency-num">438 ms</span>
+                    <span class="score-sub">4.7× Real-Time (CPU)</span>
+                  </div>
+                </div>
+
+                <!-- Phoneme-by-Phoneme Alignment Breakdown -->
+                <div class="phoneme-breakdown-card">
+                  <div class="phoneme-header">
+                    <span>Phonetic Alignment &amp; Diacritics Verification</span>
+                    <span class="phoneme-badge">Boundary Drift &le; 14ms</span>
+                  </div>
+                  <div class="phoneme-chips-timeline" id="phoneme-chips-timeline">
+                    <!-- Populated dynamically via JS -->
+                  </div>
+                </div>
+
+                <!-- Diagnostic Feedback -->
+                <div class="diagnostic-feedback-box" id="diagnostic-feedback-box">
+                  <strong>Diagnostic Report:</strong> <span id="diagnostic-feedback-text">Acoustic alignment confident across 118h speaker-disjoint acoustic checkpoint. High tone contour on [bá] and vowel articulation on [sọ̀rọ̀] aligned within 12ms of ground truth.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- DEMO 3: caseflow Tariff Classification Simulator -->
+          <div class="demo-panel" id="demo-tariff-panel" role="tabpanel">
+            <div class="demo-grid">
+              <div class="demo-controls-col">
+                <h3 class="demo-panel-title">caseflow: Customs Tariff Cascade</h3>
+                <p class="demo-explainer">
+                  Classifying international trade goods into 10-digit tariff codes using 220,625 U.S. and ECOWAS customs rulings. Try sample trade goods to see the 3-stage classification cascade in action.
+                </p>
+
+                <div class="sample-queries-box">
+                  <span class="sample-label">Try sample items:</span>
+                  <div class="sample-chips">
+                    <button class="query-chip active" data-query="lithium">Lithium-ion solar storage battery pack 48V</button>
+                    <button class="query-chip" data-query="tilapia">Frozen whole tilapia fillets for commercial sale</button>
+                    <button class="query-chip" data-query="excavator">Hydraulic pump spare parts for tracked excavator</button>
+                    <button class="query-chip" data-query="silk">Woven printed silk scarves, hand-rolled edges</button>
+                  </div>
+                </div>
+
+                <div class="custom-query-input">
+                  <input type="text" id="tariff-custom-input" class="form-input" placeholder="Or type a custom product description...">
+                  <button type="button" class="btn btn-secondary" id="btn-run-tariff">Classify Goods</button>
+                </div>
+
+                <div class="pipeline-flow-diagram">
+                  <div class="stage-step" id="stage-1">
+                    <div class="stage-badge">Stage 1</div>
+                    <div class="stage-content">
+                      <div class="stage-title">Beam Search &amp; Legal Notes</div>
+                      <div class="stage-stat">Ensemble + Tree Filters &bull; 64.1% Acc</div>
+                    </div>
+                    <div class="stage-status-icon">✓</div>
+                  </div>
+                  <div class="stage-step" id="stage-2">
+                    <div class="stage-badge">Stage 2</div>
+                    <div class="stage-content">
+                      <div class="stage-title">LambdaRank Cross-Encoders</div>
+                      <div class="stage-stat">605k Mined Hard Confusions &bull; 69.1% Acc</div>
+                    </div>
+                    <div class="stage-status-icon">✓</div>
+                  </div>
+                  <div class="stage-step" id="stage-3">
+                    <div class="stage-badge">Stage 3</div>
+                    <div class="stage-content">
+                      <div class="stage-title">Calibrated DeepSeek Arbiter</div>
+                      <div class="stage-stat">ECE 0.029 &bull; $0.0003/query &bull; 76.1% Acc</div>
+                    </div>
+                    <div class="stage-status-icon">✓</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tariff Output Display Column -->
+              <div class="demo-visual-col">
+                <div class="tariff-result-card" id="tariff-output-card">
+                  <div class="result-header">
+                    <div class="code-badge" id="tariff-code">8507.60.00.00</div>
+                    <div class="confidence-pill" id="tariff-conf">Confidence: 94.2% (Auto-Accepted)</div>
+                  </div>
+
+                  <h4 class="product-title" id="tariff-prod-title">Lithium-ion accumulators, including separators</h4>
+
+                  <div class="tariff-rationale-box">
+                    <span class="rationale-header">Legal Rationale &amp; Explanatory Notes:</span>
+                    <p id="tariff-rationale-text">
+                      Classified under Chapter 85 by General Rule of Interpretation 1 (GRI 1). Legal Note 8 to Chapter 85 specifically covers electric accumulators incorporating lithium technology. Excluded from 85.04 (converters) because the pack includes integrated chemical storage cells.
+                    </p>
+                  </div>
+
+                  <div class="tariff-meta-grid">
+                    <div class="t-meta-item">
+                      <span class="t-meta-label">ECOWAS CET Duty:</span>
+                      <span class="t-meta-val" id="tariff-duty">5% Import Duty + 7.5% VAT</span>
+                    </div>
+                    <div class="t-meta-item">
+                      <span class="t-meta-label">System Route:</span>
+                      <span class="t-meta-val text-success" id="tariff-route">Autonomous Pass (No Broker Escalation)</span>
+                    </div>
+                    <div class="t-meta-item">
+                      <span class="t-meta-label">Precedents Mined:</span>
+                      <span class="t-meta-val" id="tariff-precedents">HQ H301428, NY N312891</span>
+                    </div>
+                    <div class="t-meta-item">
+                      <span class="t-meta-label">Inference Cost:</span>
+                      <span class="t-meta-val" id="tariff-cost">$0.00028</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Publications & Preprints Section -->
+    <section class="section-container" id="publications">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Peer-Reviewed &amp; Preprints</span>
+          <h2 class="section-title">Research Publications (2026)</h2>
+          <p class="section-description">
+            First-author investigations in model efficiency, African NLP pipeline integrity, and parameter-efficient modular routing.
+          </p>
+        </div>
+
+        <div class="publications-list">
+          <!-- Paper 1: A Tilted Bowl Is Not a Slippery Slope -->
+          <article class="paper-card">
+            <div class="paper-badge-row">
+              <span class="badge badge-accent">arXiv:2609.39277</span>
+              <span class="badge badge-venue">Preprint (Sept 2026)</span>
+              <span class="badge badge-lead">Co-First Author</span>
+            </div>
+
+            <h3 class="paper-title">A Tilted Bowl Is Not a Slippery Slope: Compressing Looped Models</h3>
+            <p class="paper-authors">
+              Steven Kolawole*, <strong>Pearse Jim*</strong>, Opegbemi M. Busoye, Glory Bagai, Virginia Smith (*Equal contribution)
+            </p>
+            <p class="paper-institutions">ML Collective &bull; Carnegie Mellon University (CMU)</p>
+
+            <p class="paper-abstract">
+              Investigates the dynamics of aggressive compression in settling/looped architectures. Proves and empirically demonstrates that fixed rounding error does not accumulate indefinitely in settling loops; rather, it shifts the fixed point (akin to tilting a bowl shifting where a marble rests). Reveals that failed compressed models can recover accuracy with 8-bit finishing loops, and introduces a dynamic halting controller that outperforms fixed-depth execution by up to 15 points on Sudoku-Extreme and Maze-Hard while requiring only one-third of the weight traffic.
+            </p>
+
+            <div class="paper-tags">
+              <span class="tag">Looped Models</span>
+              <span class="tag">Model Compression</span>
+              <span class="tag">Dynamic Halting</span>
+              <span class="tag">Fixed-Point Convergence</span>
+              <span class="tag">Edge AI</span>
+            </div>
+
+            <div class="paper-actions">
+              <a href="https://arxiv.org/abs/2609.39277" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline">
+                <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                <span>arXiv:2609.39277</span>
+              </a>
+              <button type="button" class="btn btn-sm btn-secondary copy-bibtex-btn" data-bib="kolawole2026tilted">
+                <span>Copy BibTeX</span>
+              </button>
+            </div>
+          </article>
+
+          <!-- Paper 2: What Survives When You Compress a Recursive Reasoner -->
+          <article class="paper-card">
+            <div class="paper-badge-row">
+              <span class="badge badge-accent">arXiv:2606.26488</span>
+              <span class="badge badge-venue">Preprint (June 2026)</span>
+              <span class="badge badge-lead">Co-First Author</span>
+            </div>
+
+            <h3 class="paper-title">What Survives When You Compress a Recursive Reasoner for the Edge?</h3>
+            <p class="paper-authors">
+              <strong>Pearse Jim*</strong>, Steven Kolawole*, Opegbemi M. Busoye, Glory Bagai, Virginia Smith (*Equal contribution)
+            </p>
+            <p class="paper-institutions">ML Collective &bull; Carnegie Mellon University (CMU)</p>
+
+            <p class="paper-abstract">
+              Sweeps precision across three reasoning tasks and two recursive architectures to investigate edge deployment. Demonstrates that naive INT4 quantization deceptively maintains local token accuracy while silently collapsing puzzle-exact multi-step reasoning to zero. Introduces <em>carry-trajectory fidelity</em>, a label-free cosine diagnostic that predicts collapse, and formulates an end-to-end recipe: flash-streaming embeddings to overcome 99.4 MB SRAM bottlenecks, INT8 execution at single recursion cycles, and per-channel calibrated INT4 fitting a full reasoner onto a 4 MB microcontroller without retraining.
+            </p>
+
+            <div class="paper-tags">
+              <span class="tag">Edge AI</span>
+              <span class="tag">Recursive Reasoners</span>
+              <span class="tag">INT4/INT8 Quantization</span>
+              <span class="tag">Carry-Trajectory Fidelity</span>
+              <span class="tag">Microcontrollers</span>
+            </div>
+
+            <div class="paper-actions">
+              <a href="https://arxiv.org/abs/2606.26488" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline">
+                <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                <span>arXiv:2606.26488</span>
+              </a>
+              <button type="button" class="btn btn-sm btn-secondary copy-bibtex-btn" data-bib="jim2026what">
+                <span>Copy BibTeX</span>
+              </button>
+            </div>
+          </article>
+
+          <!-- Paper 3: Hausa Speech Error Cascades -->
+          <article class="paper-card">
+            <div class="paper-badge-row">
+              <span class="badge badge-accent">WiML @ ICML 2026</span>
+              <span class="badge badge-venue">ICBINB @ ICLR 2026</span>
+              <span class="badge badge-lead">First Author</span>
+            </div>
+
+            <h3 class="paper-title">Why Large Language Models Fail for Hausa Educational Content: Cascading Errors from Translation to Speech to Comprehension</h3>
+            <p class="paper-authors">
+              <strong>Pearse Jim</strong> (First Author)
+            </p>
+            <p class="paper-institutions">ML Collective</p>
+
+            <p class="paper-abstract">
+              Presents the first stratified evaluation of the complete English &rarr; Hausa &rarr; Speech &rarr; Comprehension pipeline for exam content, analyzing 790 balanced WASSCE exam questions over 10 disciplines and 15 years against five ASR models across human and TTS audio. Uncovers that standard aggregate Word Error Rate dangerously obscures systemic failures: subject ASR error varies significantly (54.6% Economics vs. 75.6% Chemistry, Kruskal-Wallis <em>p</em> &lt; 10<sup>-6</sup>), a 63.4% WER precipitates a 95.6% translation fidelity collapse, and tonal/vowel-length transcription error rates reach 100%.
+            </p>
+
+            <div class="paper-tags">
+              <span class="tag">African NLP</span>
+              <span class="tag">Hausa Speech</span>
+              <span class="tag">Error Cascades</span>
+              <span class="tag">Stratified Evaluation</span>
+              <span class="tag">ASR Evaluation</span>
+            </div>
+
+            <div class="paper-actions">
+              <button type="button" class="btn btn-sm btn-secondary copy-bibtex-btn" data-bib="jim2026hausa">
+                <span>Copy BibTeX</span>
+              </button>
+            </div>
+          </article>
+
+          <!-- Paper 4: Remix Context-Aware Embedding Routing -->
+          <article class="paper-card">
+            <div class="paper-badge-row">
+              <span class="badge badge-accent">LM4UC @ AAAI 2026</span>
+              <span class="badge badge-venue">Oral / Workshop</span>
+              <span class="badge badge-lead">Sole Author</span>
+            </div>
+
+            <h3 class="paper-title">Remix, Don’t Expand: Context-Aware Embedding Routing</h3>
+            <p class="paper-authors">
+              <strong>Pearse Jim</strong>
+            </p>
+            <p class="paper-institutions">ML Collective</p>
+
+            <p class="paper-abstract">
+              Challenges the paradigm of scaling monolithic embedding tables by applying Mixture-of-Experts (MoE) routing directly to the input embedding table rather than deep feed-forward blocks. Routing over a compact 64-dimensional base representation matches dense 512-dimensional baselines across five language modeling benchmarks with 8&times; fewer active dimensions and 82.5% fewer parameters (12.32M vs. 70.46M), demonstrating a 3.6&times; parameter-efficiency gain on Penn Treebank.
+            </p>
+
+            <div class="paper-tags">
+              <span class="tag">Mixture of Experts</span>
+              <span class="tag">Embedding Routing</span>
+              <span class="tag">Parameter Efficiency</span>
+              <span class="tag">Language Modeling</span>
+            </div>
+
+            <div class="paper-actions">
+              <button type="button" class="btn btn-sm btn-secondary copy-bibtex-btn" data-bib="jim2026remix">
+                <span>Copy BibTeX</span>
+              </button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects Catalog Section (Filterable) -->
+    <section class="section-container" id="projects">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Engineered Systems</span>
+          <h2 class="section-title">Selected Systems &amp; Architectures</h2>
+          <p class="section-description">
+            Production-grade systems, evaluation harnesses, and ML architectures built on empirical rigor.
+          </p>
+
+          <!-- Project Filter Chips -->
+          <div class="filter-chips-container" role="tablist" aria-label="Project Category Filter">
+            <button type="button" class="filter-chip active" data-filter="all">All Systems (7)</button>
+            <button type="button" class="filter-chip" data-filter="efficiency">Model Efficiency (3)</button>
+            <button type="button" class="filter-chip" data-filter="speech">Speech &amp; Audio (2)</button>
+            <button type="button" class="filter-chip" data-filter="agents">LLM &amp; Agent Systems (3)</button>
+          </div>
+        </div>
+
+        <div class="projects-grid" id="projects-grid">
+          <!-- Project 1: caseflow -->
+          <article class="project-card" data-category="efficiency agents">
+            <div class="card-top">
+              <div class="card-badge-group">
+                <span class="proj-badge">Legal ML &bull; 277 Tests</span>
+                <span class="proj-badge green">ECE 0.029</span>
+              </div>
+              <a href="https://github.com/Seqaeon" target="_blank" rel="noopener noreferrer" class="proj-external-icon" aria-label="GitHub Repository">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+            </div>
+            <h3 class="project-title">caseflow: Customs Tariff Classification with Legal Argument</h3>
+            <p class="project-desc">
+              Classifies trade goods into Nigeria's 10-digit ECOWAS CET or US HTS tariff trees and articulates legal reasoning like a licensed customs broker. Mined on 220,625 crawled rulings.
+            </p>
+            <ul class="project-highlights">
+              <li><strong>76.1%</strong> top-1 accuracy on post-2023 unseen rulings vs 55.2% standalone LLM and 47.8% kNN.</li>
+              <li>3-stage cascade: Tree beam search &rarr; LambdaRank cross-encoders &rarr; DeepSeek LLM arbitration ($0.0003/query).</li>
+              <li>Calibrated confidence auto-accepts <strong>43.9%</strong> of held-out goods at <strong>90.8%</strong> precision.</li>
+            </ul>
+            <div class="tech-stack-row">
+              <span class="tech-tag">Python</span>
+              <span class="tech-tag">FastAPI</span>
+              <span class="tech-tag">LightGBM</span>
+              <span class="tech-tag">PyTorch</span>
+              <span class="tech-tag">DeepSeek</span>
+              <span class="tech-tag">PostgreSQL</span>
+            </div>
+          </article>
+
+          <!-- Project 2: Yoruba Speech Engine -->
+          <article class="project-card" data-category="efficiency speech">
+            <div class="card-top">
+              <div class="card-badge-group">
+                <span class="proj-badge">Acoustic &bull; 208 Tests</span>
+                <span class="proj-badge green">4.7× Realtime</span>
+              </div>
+              <a href="https://github.com/Seqaeon" target="_blank" rel="noopener noreferrer" class="proj-external-icon" aria-label="GitHub Repository">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+            </div>
+            <h3 class="project-title">Yoruba Learner: Speech &amp; Pronunciation Assessment App</h3>
+            <p class="project-desc">
+              Interactive language learning app powered by the finished 8-stage Yoruba speech engine, providing real-time acoustic assessment and sub-second pronunciation feedback.
+            </p>
+            <ul class="project-highlights">
+              <li>Interactive learner app with real-time pitch contour feedback, vowel error pinpointing, and tone verification.</li>
+              <li>Acoustic model trained from scratch on <strong>118 h</strong>, 193,309 diacritized utterances, and 2,801 speakers.</li>
+              <li><strong>93.1% vowel accuracy</strong>, 79.6% tone accuracy across speaker-disjoint splits.</li>
+              <li>Distilled neural aligner cut latency from 14.3s to <strong>0.44s (4.7× realtime CPU)</strong>, enabling instant in-app feedback without GPU dependencies.</li>
+            </ul>
+            <div class="tech-stack-row">
+              <span class="tech-tag">wav2vec2</span>
+              <span class="tech-tag">Praat/Parselmouth</span>
+              <span class="tech-tag">MFA/Kaldi</span>
+              <span class="tech-tag">PyTorch</span>
+              <span class="tech-tag">FastAPI</span>
+            </div>
+          </article>
+
+          <!-- Project 3: SEC 10-K Agent Harness -->
+          <article class="project-card" data-category="agents">
+            <div class="card-top">
+              <div class="card-badge-group">
+                <span class="proj-badge">Agent Harness</span>
+                <span class="proj-badge cyan">100% Provenance</span>
+              </div>
+              <a href="https://github.com/Seqaeon" target="_blank" rel="noopener noreferrer" class="proj-external-icon" aria-label="GitHub Repository">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+            </div>
+            <h3 class="project-title">SEC 10-K Agent Intelligence Harness</h3>
+            <p class="project-desc">
+              Runs two agent orchestrations (LangGraph vs Custom Think-Act-Observe) over identical tools and 12 evaluation tasks to decide shipping based on measured metrics.
+            </p>
+            <ul class="project-highlights">
+              <li>Every numeric claim cross-referenced with SEC XBRL companyfacts for <strong>100% provenance integrity</strong>.</li>
+              <li>3-tier retrieval with zero vector DB: Fact Store + BM25 + NetworkX Knowledge Graph (1,442 nodes).</li>
+              <li>Chunk-size A/B cut token usage 6.7&times; while severity accuracy jumped from 53.8% to 88.5%.</li>
+            </ul>
+            <div class="tech-stack-row">
+              <span class="tech-tag">LangGraph</span>
+              <span class="tech-tag">MCP</span>
+              <span class="tech-tag">NetworkX</span>
+              <span class="tech-tag">SEC EDGAR/XBRL</span>
+              <span class="tech-tag">DeepSeek</span>
+            </div>
+          </article>
+
+          <!-- Project 4: TheLayman -->
+          <article class="project-card" data-category="agents">
+            <div class="card-top">
+              <div class="card-badge-group">
+                <span class="proj-badge">Web Application</span>
+                <span class="proj-badge">160 Tests</span>
+              </div>
+              <a href="https://github.com/Seqaeon" target="_blank" rel="noopener noreferrer" class="proj-external-icon" aria-label="GitHub Repository">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+            </div>
+            <h3 class="project-title">TheLayman: Multi-Depth Paper Explainer</h3>
+            <p class="project-desc">
+              Daily scientific discovery feed and paper explainer: ingests arXiv URLs, DOIs, or PDFs and teaches them across three distinct conceptual depths.
+            </p>
+            <ul class="project-highlights">
+              <li>Supports 5 interchangeable LLM providers based on user account configuration.</li>
+              <li>Engineered domain-level feed balancing (preventing computer science from dominating all 20 feed slots).</li>
+              <li>Fully tested (160 tests) and deployed on Render with PostgreSQL.</li>
+            </ul>
+            <div class="tech-stack-row">
+              <span class="tech-tag">FastAPI</span>
+              <span class="tech-tag">PostgreSQL</span>
+              <span class="tech-tag">Multi-LLM</span>
+              <span class="tech-tag">Docker</span>
+              <span class="tech-tag">Render</span>
+            </div>
+          </article>
+
+          <!-- Project 5: AoLabs Continual Recommender -->
+          <article class="project-card" data-category="efficiency">
+            <div class="card-top">
+              <div class="card-badge-group">
+                <span class="proj-badge">Online ML</span>
+                <span class="proj-badge">Weightless Architecture</span>
+              </div>
+              <a href="https://github.com/Seqaeon" target="_blank" rel="noopener noreferrer" class="proj-external-icon" aria-label="GitHub Repository">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+            </div>
+            <h3 class="project-title">AoLabs: Continual Learning &amp; Weightless AI</h3>
+            <p class="project-desc">
+              Benchmarked novel weightless neural architectures against Transformer and LSTM baselines, building the comparative evaluation harness.
+            </p>
+            <ul class="project-highlights">
+              <li>Engineered online-learning movie recommender adapting to stream interactions in real-time.</li>
+              <li>Implemented reinforcement learning game agents on weightless substrates.</li>
+              <li>Extended open-source MNIST weightless model from binary to full greyscale classification.</li>
+            </ul>
+            <div class="tech-stack-row">
+              <span class="tech-tag">PyTorch</span>
+              <span class="tech-tag">Flask</span>
+              <span class="tech-tag">CatBoost</span>
+              <span class="tech-tag">Online RL</span>
+            </div>
+          </article>
+
+          <!-- Project 6: Hamoye Traffic Predictor -->
+          <article class="project-card" data-category="efficiency">
+            <div class="card-top">
+              <div class="card-badge-group">
+                <span class="proj-badge">Applied ML</span>
+                <span class="proj-badge">Lead Finalist</span>
+              </div>
+              <a href="https://github.com/Seqaeon" target="_blank" rel="noopener noreferrer" class="proj-external-icon" aria-label="GitHub Repository">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+            </div>
+            <h3 class="project-title">Hamoye: Urban Traffic Prediction Platform</h3>
+            <p class="project-desc">
+              Assistant Project Lead for Team SciPy at Hamoye '22 Grand Finale. Built and deployed machine learning pipeline for urban traffic forecasting.
+            </p>
+            <ul class="project-highlights">
+              <li>Led team through time-series feature engineering, feature selection, and ensemble modeling.</li>
+              <li>Streamlit interactive deployment with geospatial traffic intensity mapping.</li>
+              <li>Awarded top ranking at the Grand Finale presentation.</li>
+            </ul>
+            <div class="tech-stack-row">
+              <span class="tech-tag">Python</span>
+              <span class="tech-tag">CatBoost</span>
+              <span class="tech-tag">Scikit-Learn</span>
+              <span class="tech-tag">Streamlit</span>
+            </div>
+          </article>
+
+          <!-- Project 7: SpeedVibe Embedded IoT -->
+          <article class="project-card" data-category="efficiency">
+            <div class="card-top">
+              <div class="card-badge-group">
+                <span class="proj-badge">Hardware &bull; Firmware</span>
+                <span class="proj-badge">Microcontrollers</span>
+              </div>
+              <a href="https://github.com/Seqaeon" target="_blank" rel="noopener noreferrer" class="proj-external-icon" aria-label="GitHub Repository">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+            </div>
+            <h3 class="project-title">SpeedVibe: Embedded IoT &amp; Microcontroller Firmware</h3>
+            <p class="project-desc">
+              Development of embedded systems and IoT devices in C++ on microcontrollers, profiling clock cycles and integrating real-time sensors.
+            </p>
+            <ul class="project-highlights">
+              <li>Wrote low-level firmware in C++ for Arduino and microcontroller platforms.</li>
+              <li>Conducted component evaluation, circuit testing, and sensor calibration.</li>
+              <li>Formed the physical respect for SRAM limits that underpins current edge AI quantization work.</li>
+            </ul>
+            <div class="tech-stack-row">
+              <span class="tech-tag">C++</span>
+              <span class="tech-tag">Arduino</span>
+              <span class="tech-tag">Embedded Systems</span>
+              <span class="tech-tag">IoT</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Research Terminal Section -->
+    <section class="section-container terminal-section-wrapper" id="terminal-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Interactive Shell</span>
+          <h2 class="section-title">Developer &amp; Research Terminal</h2>
+          <p class="section-description">
+            Run commands directly in this simulated research terminal to inspect system benchmarks, paper citations, tech stack, or query my background.
+          </p>
+        </div>
+
+        <div class="terminal-window">
+          <div class="terminal-titlebar">
+            <div class="titlebar-buttons">
+              <span class="t-btn close"></span>
+              <span class="t-btn minimize"></span>
+              <span class="t-btn zoom"></span>
+            </div>
+            <div class="terminal-title">seqaeon@research-box: ~/portfolio</div>
+            <div class="terminal-status">ONLINE (zsh)</div>
+          </div>
+
+          <div class="terminal-body" id="terminal-body">
+            <div class="term-line output">
+              <span class="term-text-cyan">Pearse Jim Research CLI v2.4</span> &bull; Type <span class="term-kbd">help</span> to list available commands.
+            </div>
+            <div class="term-line output">
+              Try clicking one of the suggested commands below or type in the input.
+            </div>
+            
+            <div class="suggested-cmds">
+              <button class="cmd-pill" data-cmd="benchmarks">benchmarks</button>
+              <button class="cmd-pill" data-cmd="papers">papers</button>
+              <button class="cmd-pill" data-cmd="cat philosophy.md">cat philosophy.md</button>
+              <button class="cmd-pill" data-cmd="edge-recipe">edge-recipe</button>
+              <button class="cmd-pill" data-cmd="stack">stack</button>
+              <button class="cmd-pill" data-cmd="whoami">whoami</button>
+              <button class="cmd-pill" data-cmd="contact">contact</button>
+              <button class="cmd-pill" data-cmd="clear">clear</button>
+            </div>
+
+            <div id="terminal-history"></div>
+
+            <div class="terminal-input-row">
+              <span class="term-prompt">seqaeon@edge-lab:~$</span>
+              <input type="text" id="terminal-input" class="term-input" autocomplete="off" spellcheck="false" placeholder="Type a command (e.g. 'help')...">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience Timeline Section -->
+    <section class="section-container" id="experience">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Career Trajectory</span>
+          <h2 class="section-title">Experience &amp; Research Affiliations</h2>
+          <p class="section-description">
+            A track record spanning research labs, ML engineering contracts, and embedded systems.
+          </p>
+        </div>
+
+        <div class="timeline">
+          <!-- Item 1: ML Collective -->
+          <div class="timeline-item" data-role="efficiency">
+            <div class="timeline-marker cyan"></div>
+            <div class="timeline-content">
+              <div class="timeline-top">
+                <span class="timeline-period">April 2025 – Present</span>
+                <span class="timeline-badge">Research</span>
+              </div>
+              <h3 class="timeline-role">Independent Machine Learning Researcher</h3>
+              <h4 class="timeline-company">ML Collective &bull; Remote</h4>
+              <p class="timeline-desc">
+                Leading research at the boundary of hardware constraints and model representations:
+              </p>
+              <ul class="timeline-bullets">
+                <li>First author on edge compression of recursive reasoners (with CMU): diagnosed reasoning collapse, introduced carry-trajectory fidelity, and engineered 4 MB MCU deployment.</li>
+                <li>Conducted the first stratified evaluation of English &rarr; Hausa &rarr; Speech &rarr; Comprehension pipelines across 790 exam questions (accepted at WiML @ ICML 2026, ICBINB @ ICLR 2026).</li>
+                <li>Developed <em>Remix, Don’t Expand</em> context-aware embedding table routing (accepted at LM4UC @ AAAI 2026).</li>
+              </ul>
+              <div class="timeline-tags">
+                <span>PyTorch</span><span>Transformers</span><span>Edge Quantization</span><span>MoE Routing</span><span>Acoustic SSL</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 2: AoLabs -->
+          <div class="timeline-item" data-role="efficiency">
+            <div class="timeline-marker cyan"></div>
+            <div class="timeline-content">
+              <div class="timeline-top">
+                <span class="timeline-period">October 2024 – April 2025</span>
+                <span class="timeline-badge">Contract</span>
+              </div>
+              <h3 class="timeline-role">Software Engineer &amp; Machine Learning Engineer</h3>
+              <h4 class="timeline-company">AoLabs &bull; Remote</h4>
+              <p class="timeline-desc">
+                Benchmarked novel weightless neural architectures against Transformer and LSTM baselines:
+              </p>
+              <ul class="timeline-bullets">
+                <li>Built evaluation harnesses and continual online-learning movie recommendation systems.</li>
+                <li>Trained reinforcement-learning game agents and engineered large-scale scraping pipelines.</li>
+                <li>Open source contribution: extended AoLabs MNIST from binary to greyscale classification.</li>
+              </ul>
+              <div class="timeline-tags">
+                <span>PyTorch</span><span>Flask</span><span>Scikit-Learn</span><span>Online Learning</span><span>Scraping</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 3: ACME Intern -->
+          <div class="timeline-item" data-role="agents">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-top">
+                <span class="timeline-period">March 2024 – September 2024</span>
+                <span class="timeline-badge">Internship</span>
+              </div>
+              <h3 class="timeline-role">Machine Learning Engineer Intern &bull; Assistant Project Lead</h3>
+              <h4 class="timeline-company">ACME &bull; Remote</h4>
+              <p class="timeline-desc">
+                Led a sub-team through data collection, feature engineering, and deployment of an artist similarity and recommendation service on Flask.
+              </p>
+              <div class="timeline-tags">
+                <span>Gradient Boosting</span><span>Flask</span><span>Team Leadership</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 4: Hamoye -->
+          <div class="timeline-item" data-role="efficiency">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-top">
+                <span class="timeline-period">May 2022 – November 2022</span>
+                <span class="timeline-badge">Internship</span>
+              </div>
+              <h3 class="timeline-role">Machine Learning Intern &bull; Assistant Project Lead</h3>
+              <h4 class="timeline-company">Hamoye &bull; Remote</h4>
+              <p class="timeline-desc">
+                Assistant Project Lead for Team SciPy at Hamoye '22 Grand Finale: owned project scope, timelines, predictive traffic models, and Streamlit deployment.
+              </p>
+              <div class="timeline-tags">
+                <span>Streamlit</span><span>CatBoost</span><span>Scikit-Learn</span><span>Time-Series</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 5: SpeedVibe -->
+          <div class="timeline-item" data-role="efficiency">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-top">
+                <span class="timeline-period">September 2021 – April 2022</span>
+                <span class="timeline-badge">Embedded Systems</span>
+              </div>
+              <h3 class="timeline-role">Engineering Intern</h3>
+              <h4 class="timeline-company">SpeedVibe &bull; Nigeria</h4>
+              <p class="timeline-desc">
+                Developed embedded systems and IoT devices; wrote firmware in C++ for microcontrollers and integrated sensors, establishing physical respect for memory and clock constraints.
+              </p>
+              <div class="timeline-tags">
+                <span>C++</span><span>Arduino</span><span>Microcontrollers</span><span>Embedded IoT</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills & Empirical Methodology Grid -->
+    <section class="section-container" id="skills">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Capabilities</span>
+          <h2 class="section-title">Technical Skills &amp; Research Discipline</h2>
+          <p class="section-description">
+            Tooling is transient; empirical measurement and architectural sound principles endure.
+          </p>
+        </div>
+
+        <div class="skills-grid">
+          <!-- ML & Efficiency -->
+          <div class="skill-category-card">
+            <div class="s-cat-header">
+              <span class="s-cat-icon">🧠</span>
+              <h3>ML &amp; Edge Efficiency</h3>
+            </div>
+            <div class="skill-chips-wrap">
+              <span class="s-chip">PyTorch</span>
+              <span class="s-chip">Transformers</span>
+              <span class="s-chip">INT4 / INT8 Quantization</span>
+              <span class="s-chip">Per-Channel Calibration</span>
+              <span class="s-chip">QAT</span>
+              <span class="s-chip">Mixture-of-Experts (MoE)</span>
+              <span class="s-chip">Structured Pruning</span>
+              <span class="s-chip">Knowledge Distillation</span>
+              <span class="s-chip">Linear Attention</span>
+              <span class="s-chip">Recursive Reasoners</span>
+              <span class="s-chip">LightGBM / CatBoost</span>
+            </div>
+          </div>
+
+          <!-- Speech & Audio -->
+          <div class="skill-category-card">
+            <div class="s-cat-header">
+              <span class="s-cat-icon">🎙️</span>
+              <h3>Speech, Audio &amp; NLP</h3>
+            </div>
+            <div class="skill-chips-wrap">
+              <span class="s-chip">Montreal Forced Aligner (MFA)</span>
+              <span class="s-chip">Kaldi GMM-HMM</span>
+              <span class="s-chip">wav2vec2 &amp; MMS</span>
+              <span class="s-chip">Whisper</span>
+              <span class="s-chip">Praat / Parselmouth</span>
+              <span class="s-chip">F0 &amp; Pitch Tracking</span>
+              <span class="s-chip">Phonemic Tone Modeling</span>
+              <span class="s-chip">G2P Pronunciation Dictionaries</span>
+              <span class="s-chip">Goodness of Pronunciation (GOP)</span>
+              <span class="s-chip">WER / BLEU / chrF</span>
+            </div>
+          </div>
+
+          <!-- LLM & Agents -->
+          <div class="skill-category-card">
+            <div class="s-cat-header">
+              <span class="s-cat-icon">🤖</span>
+              <h3>LLMs &amp; Agent Systems</h3>
+            </div>
+            <div class="skill-chips-wrap">
+              <span class="s-chip">LangGraph</span>
+              <span class="s-chip">Model Context Protocol (MCP)</span>
+              <span class="s-chip">Tool-Calling Loops</span>
+              <span class="s-chip">NetworkX Knowledge Graphs</span>
+              <span class="s-chip">BM25 Retrieval</span>
+              <span class="s-chip">SEC EDGAR &amp; XBRL</span>
+              <span class="s-chip">Evaluation Harnesses</span>
+              <span class="s-chip">LLM-as-Judge</span>
+              <span class="s-chip">Regression Detection</span>
+              <span class="s-chip">Prompt Versioning</span>
+            </div>
+          </div>
+
+          <!-- Systems & Cloud -->
+          <div class="skill-category-card">
+            <div class="s-cat-header">
+              <span class="s-cat-icon">⚙️</span>
+              <h3>Backend, Serving &amp; Data</h3>
+            </div>
+            <div class="skill-chips-wrap">
+              <span class="s-chip">Python</span>
+              <span class="s-chip">C++ (Embedded)</span>
+              <span class="s-chip">FastAPI &amp; Flask</span>
+              <span class="s-chip">PostgreSQL &amp; SQLite</span>
+              <span class="s-chip">Streamlit</span>
+              <span class="s-chip">Docker</span>
+              <span class="s-chip">Render / Fly.io</span>
+              <span class="s-chip">Large-Scale Scraping</span>
+              <span class="s-chip">Bash</span>
+              <span class="s-chip">pytest</span>
+            </div>
+          </div>
+
+          <!-- Empirical Discipline -->
+          <div class="skill-category-card highlighted-discipline">
+            <div class="s-cat-header">
+              <span class="s-cat-icon">📐</span>
+              <h3>Empirical Research Discipline</h3>
+            </div>
+            <div class="skill-chips-wrap">
+              <span class="s-chip gold">Speaker-Disjoint Splits</span>
+              <span class="s-chip gold">Stratified Error Reporting</span>
+              <span class="s-chip gold">Expected Calibration Error (ECE)</span>
+              <span class="s-chip gold">Bootstrap Confidence Intervals</span>
+              <span class="s-chip gold">Rigorous Ablation Design</span>
+              <span class="s-chip gold">Kruskal-Wallis Significance Testing</span>
+              <span class="s-chip gold">pytest (Comprehensive Unit Suites)</span>
+              <span class="s-chip gold">Reproducibility Seed Verification</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Education & Global Honors Section -->
+    <section class="section-container" id="education">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Foundation</span>
+          <h2 class="section-title">Education &amp; Global Competitions</h2>
+        </div>
+
+        <div class="edu-grid">
+          <!-- Degree 1 -->
+          <div class="edu-card">
+            <div class="edu-year">2017 – 2023</div>
+            <h3 class="edu-degree">B.Eng in Mechatronics Engineering</h3>
+            <h4 class="edu-school">Federal University of Agriculture, Abeokuta (FUNAAB), Nigeria</h4>
+            <p class="edu-desc">
+              Foundation in embedded firmware, control systems, microcontrollers, clock cycle profiling, and hardware-software interfaces.
+            </p>
+          </div>
+
+          <!-- Degree 2 -->
+          <div class="edu-card">
+            <div class="edu-year">2025 – 2026</div>
+            <h3 class="edu-degree">MSc in Financial Engineering</h3>
+            <h4 class="edu-school">WorldQuant University</h4>
+            <p class="edu-desc">
+              Stochastic calculus, quantitative risk modeling, time-series econometrics, and computational simulation.
+            </p>
+          </div>
+
+          <!-- Certification -->
+          <div class="edu-card">
+            <div class="edu-year">2023</div>
+            <h3 class="edu-degree">Certified Artificial Intelligence Engineer (CAIE)</h3>
+            <h4 class="edu-school">United States Artificial Intelligence Institute (USAII)</h4>
+            <p class="edu-desc">
+              Rigorous credential in enterprise AI development, machine learning algorithms, and deep neural architectures.
+            </p>
+          </div>
+        </div>
+
+        <!-- Competitions Row -->
+        <div class="competitions-card">
+          <div class="comp-title-row">
+            <span class="comp-trophy">🏆</span>
+            <h3>Global Machine Learning Competitions</h3>
+          </div>
+          <div class="comp-badges-grid">
+            <div class="c-badge">
+              <span class="c-rank">🥉 3rd Place</span>
+              <span class="c-event">Humyn.ai Flowcaster Challenge 2023</span>
+            </div>
+            <div class="c-badge">
+              <span class="c-rank">4th Place</span>
+              <span class="c-event">Predict Potential Spammers on Fiverr</span>
+            </div>
+            <div class="c-badge">
+              <span class="c-rank">8th Place</span>
+              <span class="c-event">Digital Turbine Auction Bid Price Prediction</span>
+            </div>
+          </div>
+          <div class="affiliations-sub">
+            <strong>Active Affiliations:</strong> ML Collective &bull; AI+ FUNAAB &bull; Data Scientists Network (DSN) &bull; Google Developer Student Club
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact & Availability Section -->
+    <section class="section-container contact-section" id="contact">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Let's Connect</span>
+          <h2 class="section-title">Start a Conversation</h2>
+          <p class="section-description">
+            Interested in model efficiency research collaborations, speaking, or hiring for ML research roles? My inbox is open.
+          </p>
+        </div>
+
+        <div class="contact-grid">
+          <!-- Contact Info Card -->
+          <div class="contact-info-card">
+            <h3 class="contact-card-title">Get in Touch Directly</h3>
+            <p class="contact-card-p">
+              Whether you are discussing edge AI deployment, tonal language speech processing, or agent evaluation harnesses, I'd love to connect.
+            </p>
+
+            <div class="contact-methods-list">
+              <div class="c-method-item">
+                <div class="c-icon-circle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </div>
+                <div class="c-details">
+                  <span class="c-type">Primary Email</span>
+                  <a href="mailto:pearsejim01@gmail.com" class="c-link">pearsejim01@gmail.com</a>
+                </div>
+              </div>
+
+              <div class="c-method-item">
+                <div class="c-icon-circle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </div>
+                <div class="c-details">
+                  <span class="c-type">Phone / WhatsApp</span>
+                  <a href="tel:+2349060041736" class="c-link">+234 906 004 1736</a>
+                </div>
+              </div>
+
+              <div class="c-method-item">
+                <div class="c-icon-circle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                </div>
+                <div class="c-details">
+                  <span class="c-type">Location &amp; Timezone</span>
+                  <span class="c-text">Nigeria &bull; UTC+1 (Available Worldwide Remotely)</span>
+                </div>
+              </div>
+
+              <div class="c-method-item">
+                <div class="c-icon-circle">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                </div>
+                <div class="c-details">
+                  <span class="c-type">GitHub Repositories</span>
+                  <a href="https://github.com/Seqaeon" target="_blank" rel="noopener noreferrer" class="c-link">github.com/Seqaeon</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="download-cv-box">
+              <span class="d-label">Curriculum Vitae:</span>
+              <div class="d-links">
+                <a href="assets/pearse_jim_cv.pdf" download="Pearse_Jim_CV.pdf" class="btn btn-sm btn-primary">
+                  <span>📄 Download Pearse Jim's CV (PDF)</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Message Form -->
+          <div class="contact-form-card">
+            <h3 class="contact-card-title">Send a Direct Dispatch</h3>
+            <form id="contact-form" class="contact-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="contact-name" class="form-label">Your Name</label>
+                  <input type="text" id="contact-name" class="form-input" required placeholder="Dr. Virginia Smith / Tech Lead">
+                </div>
+                <div class="form-group">
+                  <label for="contact-email" class="form-label">Your Email</label>
+                  <input type="email" id="contact-email" class="form-input" required placeholder="colleague@domain.com">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="contact-subject" class="form-label">Subject / Purpose</label>
+                <select id="contact-subject" class="form-select">
+                  <option value="Research Collaboration">Research Collaboration (Edge AI / Speech)</option>
+                  <option value="Machine Learning Role">Machine Learning Research / Systems Role</option>
+                  <option value="Technical Consulting">Technical Consulting / Model Efficiency</option>
+                  <option value="General Conversation">General Conversation</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="contact-message" class="form-label">Message</label>
+                <textarea id="contact-message" class="form-textarea" rows="4" required placeholder="Describe your project, lab, or inquiry..."></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-block" id="btn-submit-contact">
+                <span>Dispatch Email via Client</span>
+                <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+              <div id="contact-form-status" class="form-feedback-msg"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-left">
+        <span class="footer-brand">Pearse Jim</span>
+        <span class="footer-tagline">&bull; Machine Learning Research Engineer</span>
+      </div>
+      <div class="footer-center">
+        <p>Built with vanilla HTML5, CSS3, &amp; ES6 JavaScript &bull; Zero bloat &bull; Instant load</p>
+      </div>
+      <div class="footer-right">
+        <a href="#hero" class="back-to-top" aria-label="Back to Top">
+          <span>Top ↑</span>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal: BibTeX Quick Copy -->
+  <div class="modal-overlay" id="bibtex-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="bibtex-modal-title">BibTeX Citation</h3>
+        <button type="button" class="modal-close" id="close-bibtex-modal" aria-label="Close Modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <pre class="bibtex-code-block" id="bibtex-content"></pre>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="btn-copy-modal-bib">Copy to Clipboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Application Script -->
+  <script src="app.js"></script>
+</body>
+</html>
