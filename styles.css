@@ -3490,6 +3490,14 @@ body {
   color: #ef4444;
 }
 
+.verdict-said-differently {
+  color: #f97316;
+}
+
+.verdict-inserted {
+  color: #38bdf8;
+}
+
 .acoustic-transcript-footer {
   margin-top: 0.85rem;
   font-size: 0.78rem;
@@ -3518,6 +3526,8 @@ body {
 .tone-h { color: #38bdf8; font-weight: 700; }
 .tone-m { color: #34d399; font-weight: 700; }
 .tone-l { color: #f43f5e; font-weight: 700; }
+.tone-match { color: #34d399; font-weight: 700; }
+.tone-mismatch { color: #f97316; font-weight: 700; }
 
 /* What To Work On Panel */
 .what-to-work-on-panel {

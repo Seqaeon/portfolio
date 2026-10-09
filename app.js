@@ -509,6 +509,7 @@ function initPronunciationAssessmentDemo() {
   const recordBtnText = document.getElementById('record-btn-text');
   const sampleBtn = document.getElementById('btn-sample-assess');
   const assessTeacherBtn = document.getElementById('btn-assess-teacher');
+  const testMispronounceBtn = document.getElementById('btn-test-mispronounce');
   const activeBannerYo = document.getElementById('active-banner-yo');
   const activeBannerTones = document.getElementById('active-banner-tones');
   const activeBannerEn = document.getElementById('active-banner-en');
@@ -551,6 +552,38 @@ function initPronunciationAssessmentDemo() {
   let capturedTranscript = '';
   let currentTeacherAudio = null;
 
+  // 1. Strip tone marks (acute \u0301, grave \u0300, circumflex \u0302, macron \u0304, caron \u030C)
+  // Preserves underdots (e.g., ẹ, ọ, ṣ)
+  function stripTones(str) {
+    if (!str) return '';
+    return str
+      .normalize('NFD')
+      .replace(/[\u0300\u0301\u0302\u0304\u030C]/g, '')
+      .normalize('NFC');
+  }
+
+  // 2. Strip all diacritics including underdots for base Latin root comparison
+  function stripAllDiacritics(str) {
+    if (!str) return '';
+    return str
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .normalize('NFC')
+      .toLowerCase();
+  }
+
+  // 3. Collapse consecutive repeated characters (e.g. 'beeni' -> 'beni', 'bẹẹ' -> 'bẹ', 'dabo' -> 'dabo')
+  function collapseRepeats(str) {
+    if (!str) return '';
+    return str.replace(/(.)\1+/g, '$1');
+  }
+
+  // 4. Clean word token (removes punctuation, lowercases)
+  function cleanToken(token) {
+    if (!token) return '';
+    return token.replace(/[.,/#!$%^&*;:{}=\-_`~()?"'’]/g, '').trim().toLowerCase();
+  }
+
   function normalizeYorubaText(str) {
     if (!str) return '';
     return str
@@ -578,16 +611,289 @@ function initPronunciationAssessmentDemo() {
     return 1.0 - (d[l1][l2] / Math.max(l1, l2));
   }
 
-  function formatTonePattern(str) {
-    if (!str) return '—';
-    return str.split('-').map(t => {
-      const trimmed = t.trim();
-      if (trimmed === 'H') return '<span class="tone-h">H</span>';
-      if (trimmed === 'M') return '<span class="tone-m">M</span>';
-      if (trimmed === 'L') return '<span class="tone-l">L</span>';
-      return trimmed;
+  // 5. Authentic Yoruba Word Sequence Alignment (Needleman-Wunsch / Levenshtein Dynamic Programming)
+  function alignWordSequences(refWords, heardWords) {
+    const M = refWords.length;
+    const N = heardWords.length;
+
+    // DP table for sequence edit distance
+    const dp = Array.from({ length: M + 1 }, () => new Float32Array(N + 1));
+    const backtrace = Array.from({ length: M + 1 }, () => Array(N + 1));
+
+    // Base cases
+    for (let i = 0; i <= M; i++) {
+      dp[i][0] = i * 1.0;
+      backtrace[i][0] = 'DEL'; // NOT SAID
+    }
+    for (let j = 0; j <= N; j++) {
+      dp[0][j] = j * 1.0;
+      backtrace[0][j] = 'INS'; // INSERTED
+    }
+    backtrace[0][0] = 'START';
+
+    for (let i = 1; i <= M; i++) {
+      const rRaw = refWords[i - 1];
+      const rClean = cleanToken(rRaw);
+      const rNoTone = stripTones(rClean);
+      const rBase = stripAllDiacritics(rClean);
+      const rCol = collapseRepeats(rBase);
+
+      for (let j = 1; j <= N; j++) {
+        const hRaw = heardWords[j - 1];
+        const hClean = cleanToken(hRaw);
+        const hNoTone = stripTones(hClean);
+        const hBase = stripAllDiacritics(hClean);
+        const hCol = collapseRepeats(hBase);
+
+        // Substitution cost
+        let subCost = 1.0;
+        if (rClean === hClean) {
+          subCost = 0.0; // exact match
+        } else if (rNoTone === hNoTone || rCol === hCol) {
+          subCost = 0.2; // diacritic / vowel / tone drift
+        } else {
+          const sim = computeStringSimilarity(rBase, hBase);
+          if (sim >= 0.60) {
+            subCost = 0.45; // partial phonetic match
+          } else {
+            subCost = 1.1; // different word
+          }
+        }
+
+        const costDel = dp[i - 1][j] + 1.0;
+        const costIns = dp[i][j - 1] + 1.0;
+        const costSub = dp[i - 1][j - 1] + subCost;
+
+        if (costSub <= costDel && costSub <= costIns) {
+          dp[i][j] = costSub;
+          backtrace[i][j] = 'SUB';
+        } else if (costDel <= costIns) {
+          dp[i][j] = costDel;
+          backtrace[i][j] = 'DEL';
+        } else {
+          dp[i][j] = costIns;
+          backtrace[i][j] = 'INS';
+        }
+      }
+    }
+
+    // Backtrack alignment path
+    let i = M, j = N;
+    const alignedOps = [];
+    while (i > 0 || j > 0) {
+      const op = backtrace[i][j];
+      if (op === 'SUB') {
+        alignedOps.push({
+          target: refWords[i - 1],
+          heard: heardWords[j - 1],
+          type: 'SUB'
+        });
+        i--;
+        j--;
+      } else if (op === 'DEL') {
+        alignedOps.push({
+          target: refWords[i - 1],
+          heard: '—',
+          type: 'DEL'
+        });
+        i--;
+      } else if (op === 'INS') {
+        alignedOps.push({
+          target: '—',
+          heard: heardWords[j - 1],
+          type: 'INS'
+        });
+        j--;
+      } else {
+        break;
+      }
+    }
+    alignedOps.reverse();
+
+    // Map aligned operations to verdicts and scores
+    const rows = [];
+    let matchScoreSum = 0;
+    const targetCount = Math.max(1, M);
+
+    alignedOps.forEach(op => {
+      if (op.type === 'DEL') {
+        rows.push({
+          target: op.target,
+          heard: '—',
+          verdict: 'NOT SAID',
+          scoreWeight: 0
+        });
+      } else if (op.type === 'INS') {
+        rows.push({
+          target: '—',
+          heard: op.heard,
+          verdict: 'INSERTED',
+          scoreWeight: 0
+        });
+      } else {
+        const rClean = cleanToken(op.target);
+        const hClean = cleanToken(op.heard);
+        const rNoTone = stripTones(rClean);
+        const hNoTone = stripTones(hClean);
+        const rBase = stripAllDiacritics(rClean);
+        const hBase = stripAllDiacritics(hClean);
+        const rCol = collapseRepeats(rBase);
+        const hCol = collapseRepeats(hBase);
+
+        let verdict = 'DIFFERENT';
+        let weight = 0;
+
+        if (rClean === hClean) {
+          verdict = 'ok';
+          weight = 1.0;
+        } else if (rNoTone === hNoTone || rCol === hCol) {
+          verdict = 'CHECK VOWELS';
+          weight = 0.70;
+        } else {
+          const sim = computeStringSimilarity(rBase, hBase);
+          if (sim >= 0.65) {
+            verdict = 'SAID DIFFERENTLY';
+            weight = 0.45;
+          } else {
+            verdict = 'DIFFERENT';
+            weight = 0.0;
+          }
+        }
+
+        matchScoreSum += weight;
+        rows.push({
+          target: op.target,
+          heard: op.heard,
+          verdict: verdict,
+          scoreWeight: weight
+        });
+      }
+    });
+
+    const percent = Math.round((matchScoreSum / targetCount) * 100);
+    return {
+      rows: rows,
+      score: Math.max(0, Math.min(100, percent))
+    };
+  }
+
+  // 6. Syllable Tone Pattern Formatter (Compares Detected vs Expected Syllables)
+  function formatTonePattern(detectedStr, expectedStr) {
+    if (!detectedStr || detectedStr === 'NONE') return '<span class="tone-mismatch">—</span>';
+    const detParts = detectedStr.split('-').map(s => s.trim());
+    const expParts = (expectedStr || '').split('-').map(s => s.trim());
+
+    return detParts.map((t, idx) => {
+      const exp = expParts[idx];
+      const isMatch = exp && t === exp;
+      const cssClass = isMatch ? 'tone-match' : 'tone-mismatch';
+      return `<span class="${cssClass}">${t}</span>`;
     }).join(' - ');
   }
+
+  // 7. Mispronunciation & Accent Drift Test Bank (Simulates Realistic Errors for Testing)
+  const mispronounceBank = {
+    'bee-ni': {
+      simulatedTranscript: 'báwo ni',
+      freqs: [275, 208, 205],
+      description: 'Wrong Word: Learner said "Báwo ni" (Hello) instead of "Bẹ́ẹ̀ ni" (Yes)'
+    },
+    'ba-mi-soro': {
+      simulatedTranscript: 'kí ni orúkọ rẹ',
+      freqs: [275, 205, 202, 270, 200, 140],
+      description: 'Wrong Phrase: Learner said "Kí ni orúkọ rẹ" instead of "Bá mi sọ̀rọ̀"'
+    },
+    'bawo-ni': {
+      simulatedTranscript: 'bẹ́ẹ̀ ni',
+      freqs: [270, 142, 204],
+      description: 'Wrong Word: Learner said "Bẹ́ẹ̀ ni" instead of "Báwo ni"'
+    },
+    'jowo': {
+      simulatedTranscript: 'jọwọ',
+      freqs: [205, 205],
+      description: 'Accent Drift: Flat mid tones on "Jọ̀wọ́" (no Low-High contrast)'
+    },
+    'o-dabo': {
+      simulatedTranscript: 'dàbọ̀',
+      freqs: [140, 135],
+      description: 'Omitted Word: Initial pronoun "Ó" was dropped'
+    },
+    'ki-ni-oruko-re': {
+      simulatedTranscript: 'kí ni oruko',
+      freqs: [275, 205, 205, 205, 205],
+      description: 'Omission & Flat Tone: Omitted "rẹ" and flattened high tone on "orúkọ"'
+    },
+    'inu-mi-dun': {
+      simulatedTranscript: 'inu mi',
+      freqs: [205, 205, 205],
+      description: 'Omission & Pitch Drift: Omitted "dùn" and flattened tone on "inú"'
+    },
+    'kaabo': {
+      simulatedTranscript: 'kabo',
+      freqs: [205, 205],
+      description: 'Accent Drift: Flattened tones on "Káàbọ̀"'
+    },
+    'omo-keko': {
+      simulatedTranscript: 'ọmọ keko',
+      freqs: [205, 205, 205, 205],
+      description: 'Tone Flattening: Missing high tones on "kẹ́kọ̀ọ́"'
+    },
+    'ounje-jinna': {
+      simulatedTranscript: 'ounjẹ jina',
+      freqs: [205, 205, 205, 205],
+      description: 'Vowel & Tone Drift: Flattened vowel lengths and missing tones'
+    },
+    'igba-200': {
+      simulatedTranscript: 'igbá',
+      freqs: [142, 272],
+      description: 'Wrong Word: Learner said "Igbá" (Calabash) instead of "Igba" (200)'
+    },
+    'igba-garden-egg': {
+      simulatedTranscript: 'ìgbà',
+      freqs: [142, 138],
+      description: 'Wrong Word: Learner said "Ìgbà" (Time) instead of "Igbá" (Garden egg)'
+    },
+    'igba-calabash': {
+      simulatedTranscript: 'igba',
+      freqs: [205, 205],
+      description: 'Wrong Word: Learner said "Igba" (200) instead of "Igbá" (Calabash)'
+    },
+    'igba-rope': {
+      simulatedTranscript: 'igba',
+      freqs: [205, 205],
+      description: 'Tone Flattening: Learner flattened mid-mid instead of low-low "Ìgbà"'
+    },
+    'igba-time': {
+      simulatedTranscript: 'igbá',
+      freqs: [142, 272],
+      description: 'Wrong Word: Learner said "Igbá" (Calabash) instead of "Ìgbà" (Time)'
+    },
+    'eyi-ni-igba-200': {
+      simulatedTranscript: 'èyí ni igbá',
+      freqs: [142, 272, 205, 142, 272],
+      description: 'Wrong Word: Substituted "Igbá" (Calabash) for "Igba" (200)'
+    },
+    'eyi-ni-igba-garden': {
+      simulatedTranscript: 'èyí ni ìgbà',
+      freqs: [142, 272, 205, 142, 138],
+      description: 'Wrong Word: Substituted "Ìgbà" (Time) for "Igbá"'
+    },
+    'eyi-ni-igba-calabash': {
+      simulatedTranscript: 'èyí ni igba',
+      freqs: [142, 272, 205, 205, 205],
+      description: 'Wrong Word: Substituted "Igba" (200) for "Igbá"'
+    },
+    'eyi-ni-igba-rope': {
+      simulatedTranscript: 'èyí ni igba',
+      freqs: [142, 272, 205, 205, 205],
+      description: 'Tone Drift: Flat tones instead of Low-Low on "Ìgbà"'
+    },
+    'eyi-ni-igba-time': {
+      simulatedTranscript: 'èyí ni igbá',
+      freqs: [142, 272, 205, 142, 272],
+      description: 'Wrong Word: Substituted "Igbá" (Calabash) for "Ìgbà" (Time)'
+    }
+  };
 
   // Authentic Yoruba Speech Bank & Linguistic Definitions
   const phraseData = {
@@ -1216,14 +1522,20 @@ function initPronunciationAssessmentDemo() {
         speechRecInstance = new SpeechRec();
         speechRecInstance.continuous = true;
         speechRecInstance.interimResults = true;
+        speechRecInstance.maxAlternatives = 3;
+        try { speechRecInstance.lang = 'yo-NG'; } catch (e) {}
         speechRecInstance.onresult = (e) => {
           let t = '';
           for (let i = 0; i < e.results.length; i++) {
             t += e.results[i][0].transcript + ' ';
           }
-          capturedTranscript = t.trim();
+          if (t.trim()) {
+            capturedTranscript = t.trim();
+          }
         };
-        speechRecInstance.onerror = () => {};
+        speechRecInstance.onerror = (e) => {
+          console.warn('SpeechRecognition error:', e);
+        };
         speechRecInstance.start();
       } catch (e) {
         speechRecInstance = null;
@@ -1298,9 +1610,12 @@ function initPronunciationAssessmentDemo() {
     if (recIndicator) recIndicator.style.display = 'none';
     if (waveformStatus) waveformStatus.textContent = 'Audio recorded. Running live acoustic assessment pipeline...';
 
-    if (speechRecInstance) {
-      try { speechRecInstance.stop(); } catch (e) {}
-    }
+    // Allow ASR engine 400ms to finalize speech packets before stop
+    setTimeout(() => {
+      if (speechRecInstance) {
+        try { speechRecInstance.stop(); } catch (e) {}
+      }
+    }, 400);
 
     if (mediaStream) {
       mediaStream.getTracks().forEach(t => t.stop());
@@ -1309,6 +1624,8 @@ function initPronunciationAssessmentDemo() {
 
     if (mediaRecorder && mediaRecorder.state !== 'inactive') {
       mediaRecorder.onstop = async () => {
+        // Wait 350ms so speechRecInstance has delivered its final onresult
+        await new Promise(resolve => setTimeout(resolve, 350));
         try {
           const audioBlob = new Blob(recordedChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
           const arrayBuffer = await audioBlob.arrayBuffer();
@@ -1398,6 +1715,52 @@ function initPronunciationAssessmentDemo() {
       }
     }
     runSampleAssessment();
+  }
+
+  // 8b. Mispronunciation / Accent Drift Test (Simulates Real Errors)
+  if (testMispronounceBtn) {
+    testMispronounceBtn.addEventListener('click', () => {
+      runMispronunciationTest();
+    });
+  }
+
+  function runMispronunciationTest() {
+    const phrase = phraseData[currentPhraseKey] || phraseData['bee-ni'];
+    const simData = mispronounceBank[currentPhraseKey] || {
+      simulatedTranscript: 'báwo ni',
+      freqs: [275, 208, 205],
+      description: 'Mispronounced vowels and altered pitch register'
+    };
+
+    if (waveformStatus) {
+      waveformStatus.textContent = `Testing error detection: ${simData.description}...`;
+    }
+
+    const sr = 16000;
+    const durSec = 1.35;
+    const totalSamples = Math.floor(sr * durSec);
+    const pcm = new Float32Array(totalSamples);
+    const freqs = simData.freqs || [205, 205, 205];
+    const sylLen = Math.floor(totalSamples / freqs.length);
+
+    for (let k = 0; k < freqs.length; k++) {
+      const f0 = freqs[k];
+      const start = k * sylLen;
+      const vLen = Math.floor(sylLen * 0.75);
+      for (let i = 0; i < vLen; i++) {
+        const env = Math.sin((i / vLen) * Math.PI);
+        const s = (
+          Math.sin((2 * Math.PI * f0 * i) / sr) +
+          0.5 * Math.sin((2 * Math.PI * 2 * f0 * i) / sr) +
+          0.25 * Math.sin((2 * Math.PI * 3 * f0 * i) / sr)
+        ) * env * 0.45;
+        pcm[start + i] = s;
+      }
+    }
+
+    drawPcmWaveform(pcm, '#f59e0b');
+    capturedTranscript = simData.simulatedTranscript;
+    executePipelineAndAssess(pcm, sr, currentPhraseKey, true, false);
   }
 
   // 9. Live Audio Assessment: Real-Time Yoruba DSP Pipeline
@@ -1658,40 +2021,93 @@ function initPronunciationAssessmentDemo() {
       // Live microphone assessment
       if (capturedTranscript && capturedTranscript.length > 0) {
         acousticTranscript = capturedTranscript;
-        const normTranscript = normalizeYorubaText(capturedTranscript);
-        const heardTokens = normTranscript.split(' ').filter(Boolean);
+        const heardTokens = capturedTranscript.trim().split(/\s+/).filter(Boolean);
+        const targetTokens = targetWords.map(w => w.target);
 
-        let correctWordsCount = 0;
+        // Run authentic sequence alignment
+        const alignResult = alignWordSequences(targetTokens, heardTokens);
+        wordRows.push(...alignResult.rows);
+        wordMatchScore = alignResult.score;
+
+        if (wordMatchScore >= 80) {
+          wordMatchSub = 'Target Prompt Verified';
+        } else if (wordMatchScore >= 50) {
+          wordMatchSub = `Divergence: "${capturedTranscript}"`;
+        } else {
+          wordMatchSub = `Mismatched Words: "${capturedTranscript}"`;
+        }
+
+        // Syllable tone extraction per word
         targetWords.forEach(w => {
-          const normTarget = normalizeYorubaText(w.target);
-          let bestSim = 0;
-          let bestToken = '';
-          heardTokens.forEach(ht => {
-            const sim = computeStringSimilarity(ht, normTarget);
-            if (sim > bestSim) {
-              bestSim = sim;
-              bestToken = ht;
-            }
+          const wRow = wordRows.find(r => r.target === w.target);
+          if (wRow && wRow.verdict === 'NOT SAID') {
+            toneRows.push({
+              word: w.target,
+              expected: w.expectedTone,
+              detected: 'NONE'
+            });
+            return;
+          }
+
+          const wSyls = w.syllables || [w.target];
+          const detTones = wSyls.map(syl => {
+            const unitMatch = evaluatedChips.find(c => c.syl === syl);
+            if (!unitMatch || unitMatch.status === 'unvoiced') return 'NONE';
+            return unitMatch.detectedTone === 'High' ? 'H' : (unitMatch.detectedTone === 'Low' ? 'L' : 'M');
           });
 
-          let verdict = 'ok';
-          let heardDisplay = normTarget;
+          toneRows.push({
+            word: w.target,
+            expected: w.expectedTone,
+            detected: detTones.join(' - ')
+          });
+        });
+      } else {
+        // Acoustic-only fallback when SpeechRecognition didn't yield text
+        // Evaluates each target word strictly by its acoustic voicing and pitch contour!
+        let totalWordWeight = 0;
+        const heardPhrases = [];
 
-          if (bestSim >= 0.78) {
-            verdict = 'ok';
-            heardDisplay = bestToken;
-            correctWordsCount++;
-          } else if (bestSim >= 0.45) {
-            verdict = 'CHECK VOWELS';
-            heardDisplay = bestToken;
-            correctWordsCount += 0.5;
-          } else if (bestSim > 0.2) {
-            verdict = 'DIFFERENT';
-            heardDisplay = bestToken;
-          } else {
+        targetWords.forEach(w => {
+          const wSyls = w.syllables || [w.target];
+          const chipsForWord = evaluatedChips.filter(c => wSyls.includes(c.syl));
+
+          let verdict = 'ok';
+          let heardDisplay = w.target.toLowerCase();
+          let weight = 0;
+          let detTones = [];
+
+          if (chipsForWord.length === 0 || chipsForWord.every(c => c.status === 'unvoiced' || c.detectedTone === 'Omitted')) {
             verdict = 'NOT SAID';
             heardDisplay = '—';
+            weight = 0.0;
+            detTones = ['NONE'];
+          } else {
+            detTones = chipsForWord.map(c => {
+              if (c.status === 'unvoiced') return 'NONE';
+              return c.detectedTone === 'High' ? 'H' : (c.detectedTone === 'Low' ? 'L' : 'M');
+            });
+
+            const hasFailTone = chipsForWord.some(c => c.status === 'fail');
+            const hasWarnTone = chipsForWord.some(c => c.status === 'warn');
+
+            if (hasFailTone) {
+              verdict = 'DIFFERENT';
+              heardDisplay = '(pitch divergence)';
+              weight = 0.1;
+            } else if (hasWarnTone) {
+              verdict = 'CHECK VOWELS';
+              heardDisplay = stripTones(w.target.toLowerCase()) || '(tone drift)';
+              weight = 0.65;
+            } else {
+              verdict = 'ok';
+              heardDisplay = w.target.toLowerCase();
+              weight = 1.0;
+            }
           }
+
+          totalWordWeight += weight;
+          if (heardDisplay !== '—') heardPhrases.push(heardDisplay);
 
           wordRows.push({
             target: w.target,
@@ -1699,13 +2115,6 @@ function initPronunciationAssessmentDemo() {
             verdict: verdict
           });
 
-          const wSyls = w.syllables || [w.target];
-          const detTones = wSyls.map(syl => {
-            const unitMatch = evaluatedChips.find(c => c.syl === syl);
-            if (!unitMatch) return 'M';
-            return unitMatch.detectedTone === 'High' ? 'H' : (unitMatch.detectedTone === 'Low' ? 'L' : 'M');
-          });
-
           toneRows.push({
             word: w.target,
             expected: w.expectedTone,
@@ -1713,32 +2122,9 @@ function initPronunciationAssessmentDemo() {
           });
         });
 
-        wordMatchScore = Math.round((correctWordsCount / Math.max(1, targetWords.length)) * 100);
-        wordMatchSub = wordMatchScore >= 80 ? 'Target Prompt Verified' : `Heard: "${capturedTranscript}"`;
-      } else {
-        // Acoustic fallback if SpeechRecognition not active
-        acousticTranscript = phrase.text.toLowerCase();
-        wordMatchScore = 96;
-        wordMatchSub = 'Acoustic Envelope Matched';
-
-        targetWords.forEach(w => {
-          wordRows.push({
-            target: w.target,
-            heard: w.target.toLowerCase(),
-            verdict: 'ok'
-          });
-          const wSyls = w.syllables || [w.target];
-          const detTones = wSyls.map(syl => {
-            const unitMatch = evaluatedChips.find(c => c.syl === syl);
-            if (!unitMatch) return 'M';
-            return unitMatch.detectedTone === 'High' ? 'H' : (unitMatch.detectedTone === 'Low' ? 'L' : 'M');
-          });
-          toneRows.push({
-            word: w.target,
-            expected: w.expectedTone,
-            detected: detTones.join(' - ')
-          });
-        });
+        wordMatchScore = Math.round((totalWordWeight / Math.max(1, targetWords.length)) * 100);
+        wordMatchSub = wordMatchScore >= 75 ? 'Acoustic Pitch & Envelope Verified' : 'Acoustic Tone/Pitch Drift Detected';
+        acousticTranscript = heardPhrases.length > 0 ? heardPhrases.join(' ') : '—';
       }
     } else {
       // Sample Audio Synthesis
@@ -1763,30 +2149,34 @@ function initPronunciationAssessmentDemo() {
     // Step F: What to Work On Actionable Advice
     const whatToWorkOn = [];
     if (isTeacherAudio) {
-      whatToWorkOn.push('Practice rising tone on high tone vowels');
-      whatToWorkOn.push('Maintain steady pitch on mid tone vowels');
+      whatToWorkOn.push('Practice rising tone on high tone vowels (acute mark: á, é, ẹ́, ó, ọ́)');
+      whatToWorkOn.push('Maintain steady pitch on mid tone vowels (unmarked: a, e, ẹ, o, ọ)');
     } else {
       const hasHighMismatch = evaluatedChips.some(c => c.expectedTone === 'High' && c.detectedTone !== 'High');
       const hasMidMismatch = evaluatedChips.some(c => c.expectedTone === 'Mid' && c.detectedTone !== 'Mid');
       const hasLowMismatch = evaluatedChips.some(c => c.expectedTone === 'Low' && c.detectedTone !== 'Low');
       const hasWordMismatch = wordRows.some(r => r.verdict !== 'ok');
 
-      if (hasHighMismatch) {
-        whatToWorkOn.push('Practice rising tone on high tone vowels');
+      if (hasWordMismatch) {
+        const flaggedWords = wordRows.filter(r => r.verdict !== 'ok').map(r => r.target).filter(t => t !== '—');
+        if (flaggedWords.length > 0) {
+          whatToWorkOn.push(`Check pronunciation and articulation for: "${flaggedWords.join(', ')}"`);
+        } else {
+          whatToWorkOn.push('Check pronunciation and acoustic articulation of flagged words');
+        }
       }
-      if (hasMidMismatch) {
-        whatToWorkOn.push('Maintain steady pitch on mid tone vowels');
+      if (hasHighMismatch) {
+        whatToWorkOn.push('Practice rising tone on high tone vowels (acute mark: á, é, ẹ́, ó, ọ́)');
       }
       if (hasLowMismatch) {
-        whatToWorkOn.push('Lower pitch further on grave-accented low tones (do/L)');
+        whatToWorkOn.push('Lower pitch further on grave-accented low tones (do/L: à, è, ẹ̀, ò, ọ̀)');
       }
-      if (hasWordMismatch) {
-        whatToWorkOn.push('Check pronunciation and acoustic articulation of flagged words');
+      if (hasMidMismatch) {
+        whatToWorkOn.push('Maintain steady pitch on mid tone vowels (unmarked: re/M)');
       }
 
       if (whatToWorkOn.length === 0) {
-        whatToWorkOn.push('Practice rising tone on high tone vowels');
-        whatToWorkOn.push('Maintain steady pitch on mid tone vowels');
+        whatToWorkOn.push('Excellent alignment! Keep practising rhythm and native cadence');
       }
     }
 
@@ -1856,7 +2246,9 @@ function initPronunciationAssessmentDemo() {
         let vClass = 'verdict-ok';
         if (row.verdict === 'CHECK VOWELS') vClass = 'verdict-check-vowels';
         else if (row.verdict === 'DIFFERENT') vClass = 'verdict-different';
+        else if (row.verdict === 'SAID DIFFERENTLY') vClass = 'verdict-said-differently';
         else if (row.verdict === 'NOT SAID') vClass = 'verdict-not-said';
+        else if (row.verdict === 'INSERTED') vClass = 'verdict-inserted';
 
         tr.innerHTML = `
           <td class="cell-target">${row.target}</td>
@@ -1879,7 +2271,7 @@ function initPronunciationAssessmentDemo() {
         tr.innerHTML = `
           <td class="cell-target">${row.word}</td>
           <td class="tone-pat-expected">${row.expected}</td>
-          <td class="tone-pat-detected">${formatTonePattern(row.detected)}</td>
+          <td class="tone-pat-detected">${formatTonePattern(row.detected, row.expected)}</td>
         `;
         tonePatternsTbody.appendChild(tr);
       });
