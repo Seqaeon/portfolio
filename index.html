@@ -584,32 +584,143 @@
 
               <!-- Target Phrase Selection -->
               <div class="assessment-phrase-box">
-                <label class="control-label">Select Target Yoruba Sentence:</label>
-                <div class="assessment-chips-grid">
-                  <button type="button" class="phrase-chip active" data-phrase="ba-mi-soro" data-text="Bá mi sọ̀rọ̀" data-translation="Speak with me" data-tones="High • Mid • Low • Low">
+                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.6rem; flex-wrap: wrap; gap: 0.5rem;">
+                  <label class="control-label" style="margin-bottom: 0;">Select Target Yoruba Sentence or Tone Minimal Pair:</label>
+                  <span style="font-size: 0.78rem; color: #a7f3d0; font-family: var(--font-mono);">15 Native Teacher WAVs Loaded</span>
+                </div>
+
+                <!-- Category Filter Tabs -->
+                <div class="phrase-category-tabs">
+                  <button type="button" class="phrase-cat-tab active" data-cat="all">All Phrases (18)</button>
+                  <button type="button" class="phrase-cat-tab" data-cat="conversations">Daily Conversations</button>
+                  <button type="button" class="phrase-cat-tab" data-cat="minimal-pairs">Igba Tone Minimal Pairs (5)</button>
+                  <button type="button" class="phrase-cat-tab" data-cat="carrier-frames">Carrier Frame Drills (5)</button>
+                </div>
+
+                <!-- Phrases Grid -->
+                <div class="assessment-chips-grid" id="assessment-chips-grid">
+                  <!-- Conversations -->
+                  <button type="button" class="phrase-chip active" data-category="conversations" data-phrase="bee-ni" data-text="Bẹ́ẹ̀ ni" data-translation="Yes / That is so" data-tones="High-Low • Mid">
+                    <span class="phrase-yo">Bẹ́ẹ̀ ni</span>
+                    <span class="phrase-tone-hint">HL - M</span>
+                    <span class="phrase-en">"Yes / That is so"</span>
+                  </button>
+                  <button type="button" class="phrase-chip" data-category="conversations" data-phrase="ba-mi-soro" data-text="Bá mi sọ̀rọ̀" data-translation="Speak with me" data-tones="High • Mid • Low • Low">
                     <span class="phrase-yo">Bá mi sọ̀rọ̀</span>
                     <span class="phrase-tone-hint">H - M - L - L</span>
                     <span class="phrase-en">"Speak with me"</span>
                   </button>
-                  <button type="button" class="phrase-chip" data-phrase="e-kaabo" data-text="Ẹ káàbọ̀ sí ilé" data-translation="Welcome home" data-tones="Mid • High-Low • High • Mid-High">
+                  <button type="button" class="phrase-chip" data-category="conversations" data-phrase="bawo-ni" data-text="Báwo ni?" data-translation="How are you? / Hello" data-tones="High • Mid • Mid" data-audio="assets/audio/phrase_3.wav">
+                    <span class="phrase-yo">Báwo ni? <span style="font-size: 0.75rem;">🔊</span></span>
+                    <span class="phrase-tone-hint">H - M - M</span>
+                    <span class="phrase-en">"How are you?"</span>
+                  </button>
+                  <button type="button" class="phrase-chip" data-category="conversations" data-phrase="jowo" data-text="Jọ̀wọ́" data-translation="Please" data-tones="Low • High" data-audio="assets/audio/phrase_2.wav">
+                    <span class="phrase-yo">Jọ̀wọ́ <span style="font-size: 0.75rem;">🔊</span></span>
+                    <span class="phrase-tone-hint">L - H</span>
+                    <span class="phrase-en">"Please"</span>
+                  </button>
+                  <button type="button" class="phrase-chip" data-category="conversations" data-phrase="o-dabo" data-text="Ó dàbọ̀" data-translation="Goodbye / Until we meet" data-tones="High • Low • Low" data-audio="assets/audio/phrase_4.wav">
+                    <span class="phrase-yo">Ó dàbọ̀ <span style="font-size: 0.75rem;">🔊</span></span>
+                    <span class="phrase-tone-hint">H - L - L</span>
+                    <span class="phrase-en">"Goodbye"</span>
+                  </button>
+                  <button type="button" class="phrase-chip" data-category="conversations" data-phrase="ki-ni-oruko-re" data-text="Kí ni orúkọ rẹ?" data-translation="What is your name?" data-tones="High • Mid • Mid • High • Mid • Low" data-audio="assets/audio/phrase_7.wav">
+                    <span class="phrase-yo">Kí ni orúkọ rẹ? <span style="font-size: 0.75rem;">🔊</span></span>
+                    <span class="phrase-tone-hint">H-M M-H-M L</span>
+                    <span class="phrase-en">"What is your name?"</span>
+                  </button>
+                  <button type="button" class="phrase-chip" data-category="conversations" data-phrase="inu-mi-dun" data-text="Inú mi dùn" data-translation="I am happy (inside me is sweet)" data-tones="Mid • High • Mid • Low" data-audio="assets/audio/phrase_10.wav">
+                    <span class="phrase-yo">Inú mi dùn <span style="font-size: 0.75rem;">🔊</span></span>
+                    <span class="phrase-tone-hint">M - H - M - L</span>
+                    <span class="phrase-en">"I am happy"</span>
+                  </button>
+                  <button type="button" class="phrase-chip" data-category="conversations" data-phrase="e-kaabo" data-text="Ẹ káàbọ̀ sí ilé" data-translation="Welcome home" data-tones="Mid • High-Low • High • Mid-High">
                     <span class="phrase-yo">Ẹ káàbọ̀ sí ilé</span>
                     <span class="phrase-tone-hint">M - HL - H - MH</span>
                     <span class="phrase-en">"Welcome home"</span>
                   </button>
-                  <button type="button" class="phrase-chip" data-phrase="omode-ko" data-text="Ọmọdé kọ́ ẹ̀kọ́" data-translation="The child learns a lesson" data-tones="Low-Mid-High • High • Low-High">
+                  <button type="button" class="phrase-chip" data-category="conversations" data-phrase="omode-ko" data-text="Ọmọdé kọ́ ẹ̀kọ́" data-translation="The child learns a lesson" data-tones="Low-Mid-High • High • Low-High">
                     <span class="phrase-yo">Ọmọdé kọ́ ẹ̀kọ́</span>
                     <span class="phrase-tone-hint">LMH - H - LH</span>
                     <span class="phrase-en">"The child learns"</span>
                   </button>
-                  <button type="button" class="phrase-chip" data-phrase="ounje-pon" data-text="Oúnjẹ ti pọ́n" data-translation="The food is ready / ripe" data-tones="Mid-High-Low • Mid • High">
+                  <button type="button" class="phrase-chip" data-category="conversations" data-phrase="ounje-pon" data-text="Oúnjẹ ti pọ́n" data-translation="The food is ready / ripe" data-tones="Mid-High-Low • Mid • High">
                     <span class="phrase-yo">Oúnjẹ ti pọ́n</span>
                     <span class="phrase-tone-hint">MHL - M - H</span>
                     <span class="phrase-en">"The food is ready"</span>
                   </button>
+
+                  <!-- Tone Minimal Pairs (5 Igba words) -->
+                  <button type="button" class="phrase-chip" data-category="minimal-pairs" data-phrase="igba-200" data-text="Igba" data-translation="Two hundred (200)" data-tones="Mid • Mid" data-audio="assets/audio/phrase_21.wav">
+                    <span class="phrase-yo">Igba <span style="font-size: 0.75rem;">🔊</span></span>
+                    <span class="phrase-tone-hint">M - M</span>
+                    <span class="phrase-en">"200 (Number)"</span>
+                  </button>
+                  <button type="button" class="phrase-chip" data-category="minimal-pairs" data-phrase="igba-garden-egg" data-text="Ìgbá" data-translation="Garden egg (eggplant)" data-tones="Low • High" data-audio="assets/audio/phrase_22.wav">
+                    <span class="phrase-yo">Ìgbá <span style="font-size: 0.75rem;">🔊</span></span>
+                    <span class="phrase-tone-hint">L - H</span>
+                    <span class="phrase-en">"Garden egg"</span>
+                  </button>
+                  <button type="button" class="phrase-chip" data-category="minimal-pairs" data-phrase="igba-calabash" data-text="Igbá" data-translation="Calabash bowl" data-tones="Mid • High" data-audio="assets/audio/phrase_23.wav">
+                    <span class="phrase-yo">Igbá <span style="font-size: 0.75rem;">🔊</span></span>
+                    <span class="phrase-tone-hint">M - H</span>
+                    <span class="phrase-en">"Calabash"</span>
+                  </button>
+                  <button type="button" class="phrase-chip" data-category="minimal-pairs" data-phrase="igba-rope" data-text="Igbà" data-translation="Climbing rope" data-tones="Mid • Low" data-audio="assets/audio/phrase_24.wav">
+                    <span class="phrase-yo">Igbà <span style="font-size: 0.75rem;">🔊</span></span>
+                    <span class="phrase-tone-hint">M - L</span>
+                    <span class="phrase-en">"Climbing rope"</span>
+                  </button>
+                  <button type="button" class="phrase-chip" data-category="minimal-pairs" data-phrase="igba-time" data-text="Ìgbà" data-translation="Time / Period / Season" data-tones="Low • Low" data-audio="assets/audio/phrase_25.wav">
+                    <span class="phrase-yo">Ìgbà <span style="font-size: 0.75rem;">🔊</span></span>
+                    <span class="phrase-tone-hint">L - L</span>
+                    <span class="phrase-en">"Time / Season"</span>
+                  </button>
+
+                  <!-- Carrier Frames -->
+                  <button type="button" class="phrase-chip" data-category="carrier-frames" data-phrase="frame-200" data-text="Èyí ni Igba" data-translation="This is two hundred (200)" data-tones="Low • High • Mid • Mid • Mid" data-audio="assets/audio/phrase_26.wav">
+                    <span class="phrase-yo">Èyí ni Igba <span style="font-size: 0.75rem;">🔊</span></span>
+                    <span class="phrase-tone-hint">L-H M M-M</span>
+                    <span class="phrase-en">"This is 200"</span>
+                  </button>
+                  <button type="button" class="phrase-chip" data-category="carrier-frames" data-phrase="frame-garden-egg" data-text="Èyí ni Ìgbá" data-translation="This is a garden egg" data-tones="Low • High • Mid • Low • High" data-audio="assets/audio/phrase_27.wav">
+                    <span class="phrase-yo">Èyí ni Ìgbá <span style="font-size: 0.75rem;">🔊</span></span>
+                    <span class="phrase-tone-hint">L-H M L-H</span>
+                    <span class="phrase-en">"This is garden egg"</span>
+                  </button>
+                  <button type="button" class="phrase-chip" data-category="carrier-frames" data-phrase="frame-calabash" data-text="Èyí ni Igbá" data-translation="This is a calabash" data-tones="Low • High • Mid • Mid • High" data-audio="assets/audio/phrase_28.wav">
+                    <span class="phrase-yo">Èyí ni Igbá <span style="font-size: 0.75rem;">🔊</span></span>
+                    <span class="phrase-tone-hint">L-H M M-H</span>
+                    <span class="phrase-en">"This is calabash"</span>
+                  </button>
+                  <button type="button" class="phrase-chip" data-category="carrier-frames" data-phrase="frame-rope" data-text="Èyí ni Igbà" data-translation="This is a climbing rope" data-tones="Low • High • Mid • Mid • Low" data-audio="assets/audio/phrase_29.wav">
+                    <span class="phrase-yo">Èyí ni Igbà <span style="font-size: 0.75rem;">🔊</span></span>
+                    <span class="phrase-tone-hint">L-H M M-L</span>
+                    <span class="phrase-en">"This is rope"</span>
+                  </button>
+                  <button type="button" class="phrase-chip" data-category="carrier-frames" data-phrase="frame-time" data-text="Èyí ni Ìgbà" data-translation="This is time / period" data-tones="Low • High • Mid • Low • Low" data-audio="assets/audio/phrase_30.wav">
+                    <span class="phrase-yo">Èyí ni Ìgbà <span style="font-size: 0.75rem;">🔊</span></span>
+                    <span class="phrase-tone-hint">L-H M L-L</span>
+                    <span class="phrase-en">"This is time"</span>
+                  </button>
+                </div>
+
+                <!-- Active Selected Phrase & Teacher Reference Audio Banner -->
+                <div class="active-phrase-banner" id="active-phrase-banner">
+                  <div class="active-phrase-info">
+                    <span class="active-phrase-yo" id="active-banner-yo">Bẹ́ẹ̀ ni</span>
+                    <span class="active-phrase-tones" id="active-banner-tones">H - L • M</span>
+                    <span class="active-phrase-en" id="active-banner-en">"Yes / That is so"</span>
+                  </div>
+                  <button type="button" class="btn-teacher-play" id="btn-play-teacher" title="Listen to Native Teacher Audio">
+                    <span id="teacher-play-icon">🔊</span>
+                    <span id="teacher-play-text">Teacher Reference</span>
+                  </button>
                 </div>
               </div>
 
-              <!-- Interactive Controls (Mic Record & Sample Audio) -->
+              <!-- Interactive Controls (Mic Record, Sample Audio, Teacher Assess) -->
               <div class="assessment-actions-row">
                 <button type="button" class="btn btn-primary" id="btn-mic-record">
                   <span class="mic-icon">🎤</span>
@@ -617,6 +728,9 @@
                 </button>
                 <button type="button" class="btn btn-secondary" id="btn-sample-assess">
                   <span>▶️ Run Sample Audio Assessment</span>
+                </button>
+                <button type="button" class="btn btn-secondary" id="btn-assess-teacher" style="border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.12); color: #34d399;" title="Evaluate Native Teacher Audio Recording">
+                  <span>⚡ Assess Teacher Audio</span>
                 </button>
                 <div class="recording-indicator" id="recording-indicator" style="display: none;">
                   <span class="rec-dot"></span>
@@ -627,7 +741,7 @@
               <!-- Live Audio Waveform Canvas -->
               <div class="waveform-box">
                 <canvas id="assessment-waveform-canvas" width="800" height="90"></canvas>
-                <div class="waveform-status" id="waveform-status">Ready. Click "Record Voice" or "Run Sample Audio Assessment".</div>
+                <div class="waveform-status" id="waveform-status">Ready. Click "Record Voice", "Run Sample Audio Assessment", or "Assess Teacher Audio".</div>
               </div>
 
               <!-- Pipeline Execution Telemetry (Animated Real-Time Progress) -->
@@ -688,6 +802,67 @@
                     <span class="score-number accent" id="res-latency-num">438 ms</span>
                     <span class="score-sub">4.7× Real-Time (CPU)</span>
                   </div>
+                </div>
+
+                <!-- 1. Phonetic Word Alignment Card (Direct App Match) -->
+                <div class="assessment-card-panel" id="phonetic-word-alignment-card">
+                  <div class="card-panel-header">
+                    <div>
+                      <h5 class="card-panel-title">Phonetic Word Alignment</h5>
+                      <p class="card-panel-sub">Checks the phonetic vowels and consonants heard. Pitch is verified separately under tone patterns.</p>
+                    </div>
+                    <span class="word-match-badge" id="alignment-word-match-badge">100% word match</span>
+                  </div>
+                  <div class="alignment-table-wrapper">
+                    <table class="alignment-table">
+                      <thead>
+                        <tr>
+                          <th>TARGET WORD</th>
+                          <th>VOICE HEARD</th>
+                          <th>VERDICT</th>
+                        </tr>
+                      </thead>
+                      <tbody id="phonetic-word-alignment-tbody">
+                        <!-- Populated dynamically via JS -->
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="acoustic-transcript-footer">
+                    Acoustic transcript: <span id="acoustic-transcript-text">bẹ́ẹ̀ ni</span>
+                  </div>
+                </div>
+
+                <!-- 2. Syllable Tone Patterns Card (Direct App Match) -->
+                <div class="assessment-card-panel" id="syllable-tone-patterns-card">
+                  <div class="card-panel-header">
+                    <div>
+                      <h5 class="card-panel-title">Syllable Tone Patterns</h5>
+                      <p class="card-panel-sub">Checks relative pitch movement per syllable against the Yorùbá orthographic tone marks.</p>
+                    </div>
+                  </div>
+                  <div class="alignment-table-wrapper">
+                    <table class="alignment-table">
+                      <thead>
+                        <tr>
+                          <th>WORD</th>
+                          <th>EXPECTED</th>
+                          <th>DETECTED</th>
+                        </tr>
+                      </thead>
+                      <tbody id="syllable-tone-patterns-tbody">
+                        <!-- Populated dynamically via JS -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- 3. What To Work On Card (Direct App Match) -->
+                <div class="assessment-card-panel what-to-work-on-panel" id="what-to-work-on-card">
+                  <h6 class="what-to-work-on-title">WHAT TO WORK ON</h6>
+                  <ul class="what-to-work-on-list" id="what-to-work-on-list">
+                    <li>Practice rising tone on high tone vowels</li>
+                    <li>Maintain steady pitch on mid tone vowels</li>
+                  </ul>
                 </div>
 
                 <!-- Phoneme-by-Phoneme Alignment Breakdown -->
